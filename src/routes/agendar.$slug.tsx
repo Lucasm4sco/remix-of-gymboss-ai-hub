@@ -10,23 +10,25 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
 import { Dumbbell, Calendar, CheckCircle2, Sparkles, Check, MessageCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { publicBookingSchema } from "@/lib/public-booking";
 
 const DAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
 export const Route = createFileRoute("/agendar/$slug")({
   loader: async ({ params }) => {
-    const { data: academy } = await supabase
-      .from("academy")
-      .select("id,name,slug,cor_primaria,telefone,endereco")
-      .eq("slug", params.slug)
-      .maybeSingle();
-    if (!academy) throw notFound();
-    const [{ data: plans }, { data: schedule }] = await Promise.all([
-      supabase.from("plan").select("id,name,description,price,featured").eq("academy_id", academy.id).eq("active", true).order("price"),
-      supabase.from("schedule").select("id,name,modality,instructor_name,day_of_week,start_time,end_time").eq("academy_id", academy.id).eq("active", true).order("day_of_week").order("start_time"),
-    ]);
-    return { academy, plans: plans ?? [], schedule: schedule ?? [] };
+    const { data, error } = await supabase.rpc("get_public_booking", { p_slug: params.slug });
+    if (error) throw error;
+    if (!data) throw notFound();
+    return publicBookingSchema.parse(data);
   },
+  head: ({ loaderData }) => ({ meta: [
+    { title: `${loaderData?.academy.name ?? "Agendamento"} — GymBoss AI` },
+    { name: "description", content: "Planos e horários públicos para solicitar uma aula experimental." },
+    { property: "og:title", content: `${loaderData?.academy.name ?? "Agendamento"} — GymBoss AI` },
+    { property: "og:description", content: "Confira planos e horários de aulas disponíveis." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: BookingPage,
   notFoundComponent: () => (
     <div className="min-h-screen flex items-center justify-center bg-[#151310] text-white p-6">
@@ -105,7 +107,7 @@ function BookingPage() {
   );
 }
 
-type ScheduleItem = { id: string; name: string; modality: string | null; instructor_name: string | null; day_of_week: number; start_time: string; end_time: string };
+type ScheduleItem = { id: string; name: string; modality: string | null; day_of_week: number; start_time: string; end_time: string };
 
 function ExperimentalForm({ schedule, brand, onDone }: { schedule: ScheduleItem[]; brand: string; onDone: (label: string) => void }) {
   // academy_id is needed for insert
@@ -163,7 +165,6 @@ function ExperimentalForm({ schedule, brand, onDone }: { schedule: ScheduleItem[
                   className="text-left p-3 rounded-lg border text-sm transition"
                   style={slotId === s.id ? { background: brand, color: "white", borderColor: brand } : {}}>
                   <div className="font-semibold">{DAYS[s.day_of_week]} · {s.start_time.slice(0,5)}</div>
-                  <div className="text-xs opacity-80">{s.instructor_name}</div>
                 </button>
               ))}
               {filtered.length === 0 && <p className="text-sm text-muted-foreground col-span-full">Sem horários cadastrados.</p>}
