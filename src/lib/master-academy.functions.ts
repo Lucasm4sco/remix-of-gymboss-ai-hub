@@ -3,16 +3,19 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
-function genPassword(len = 12) {
+function genPassword(len = 16) {
   const upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
   const lower = "abcdefghijkmnpqrstuvwxyz";
   const nums = "23456789";
   const sym = "!@#$%&*?";
   const all = upper + lower + nums + sym;
-  const pick = (s: string) => s[Math.floor(Math.random() * s.length)];
+  const rnd = (n: number) => { const b = new Uint32Array(1); const lim = Math.floor(0x100000000 / n) * n; do { crypto.getRandomValues(b); } while (b[0] >= lim); return b[0] % n; };
+  const pick = (s: string) => s[rnd(s.length)];
   let out = pick(upper) + pick(lower) + pick(nums) + pick(sym);
   while (out.length < len) out += pick(all);
-  return out.split("").sort(() => Math.random() - 0.5).join("");
+  const a = out.split("");
+  for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; }
+  return a.join("");
 }
 
 async function assertSuperAdmin(userId: string) {
