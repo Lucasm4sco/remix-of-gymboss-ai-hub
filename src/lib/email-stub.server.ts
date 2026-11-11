@@ -18,8 +18,8 @@ export type EnviarEmailPayload = {
   data: Record<string, unknown>;
 };
 
-export async function enviarEmailStub(payload: EnviarEmailPayload) {
+export async function enviarEmailStub(_payload: EnviarEmailPayload) {
   // eslint-disable-next-line no-console
-  console.log("[EMAIL STUB] (Resend nao configurado)", JSON.stringify(payload, null, 2));
+  console.log("[EMAIL STUB] (Resend nao configurado)");
   return { success: true as const, stub: true as const };
 }
