@@ -651,6 +651,7 @@ export type Database = {
       }
       current_academy_id: { Args: never; Returns: string }
       current_user_email: { Args: never; Returns: string }
+      get_public_booking: { Args: { p_slug: string }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -659,6 +660,10 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: never; Returns: boolean }
+      is_public_booking_target: {
+        Args: { p_academy: string; p_plan: string; p_schedule: string }
+        Returns: boolean
+      }
       is_super_admin: { Args: never; Returns: boolean }
       user_academy_ids: { Args: never; Returns: string[] }
       user_can_manage_academy: {
