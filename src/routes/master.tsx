@@ -4,6 +4,7 @@ import { useAuth } from "@/lib/auth-context";
 import { useTenant } from "@/lib/tenant-context";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { SidebarMaster } from "@/components/sidebar-master";
+import { accessDestination } from "@/lib/access-destination";
 
 export const Route = createFileRoute("/master")({ component: MasterLayout });
 
@@ -15,7 +16,7 @@ function MasterLayout() {
   useEffect(() => {
     if (loading || tLoading) return;
     if (!user) navigate({ to: "/entrar", replace: true });
-    else if (!tenant?.isSuperAdmin) navigate({ to: "/entrar", replace: true });
+    else if (tenant && !tenant.isSuperAdmin) navigate({ to: accessDestination(tenant), replace: true });
   }, [user, loading, tenant, tLoading, navigate]);
 
   if (loading || tLoading || !user || !tenant?.isSuperAdmin) {
