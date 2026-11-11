@@ -4,3 +4,8 @@
 - [x] Verify destination tests, anonymous claim denial, signed-out Master and mobile login.
 - [ ] Verify authenticated owner Master end-to-end: waiting for owner to sign in through Google; no auth account exists yet.
 - [x] Guide owner sign-in and Master verification.
+
+# Public data security
+- [ ] Confirm anonymous data exposure and protected tenant reads.
+- [ ] Restrict public booking reads to an explicit public projection and validate public submissions.
+- [ ] Verify visitor booking and authenticated owner access; report deep-scan follow-up.
