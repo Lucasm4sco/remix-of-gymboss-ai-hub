@@ -1,3 +1,4 @@
+import { Dumbbell } from "lucide-react";
 import { createFileRoute, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -36,14 +37,16 @@ function AppLayout() {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full">
+      <div className="modern-panel min-h-screen flex w-full">
         <SidebarTenant />
-        <div className="flex-1 flex flex-col">
+        <div className="min-w-0 flex-1 flex flex-col">
           <TrialBanner />
-          <header className="h-12 flex items-center border-b border-border bg-background">
-            <SidebarTrigger className="ml-2" />
+          <header className="h-16 flex items-center gap-3 border-b border-border bg-sidebar px-2 sm:px-4">
+            <SidebarTrigger />
+            <Dumbbell className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+            <span className="text-sm font-bold text-foreground">Gym Spotter</span>
           </header>
-          <main className="flex-1 p-6 bg-background"><Outlet /></main>
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-background"><Outlet /></main>
         </div>
       </div>
     </SidebarProvider>

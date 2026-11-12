@@ -14,10 +14,10 @@ import { useTenant } from "@/lib/tenant-context";
 import { accessDestination } from "@/lib/access-destination";
 
 export const Route = createFileRoute("/entrar")({ component: Entrar, head: () => ({ meta: [
-  { title: "Entrar — GymBoss AI" },
-  { name: "description", content: "Acesse sua academia ou a administração do GymBoss AI." },
-  { property: "og:title", content: "Entrar — GymBoss AI" },
-  { property: "og:description", content: "Acesso seguro ao GymBoss AI." },
+  { title: "Entrar — Gym Spotter" },
+  { name: "description", content: "Acesse sua academia ou a administração do Gym Spotter." },
+  { property: "og:title", content: "Entrar — Gym Spotter" },
+  { property: "og:description", content: "Acesso seguro ao Gym Spotter." },
   { property: "og:type", content: "website" },
   { name: "twitter:card", content: "summary" },
 ] }) });
@@ -68,7 +68,7 @@ function Entrar() {
           <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary">
             <Dumbbell className="h-5 w-5 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold">GymBoss AI</span>
+          <span className="text-xl font-bold">Gym Spotter</span>
         </div>
         <Card>
           <CardContent className="p-6">

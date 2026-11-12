@@ -13,7 +13,7 @@ import {
   demoFitZoneAniversariantes,
 } from "@/lib/demo-data";
 
-export const Route = createFileRoute("/demo/dashboard")({ component: Dash });
+export const Route = createFileRoute("/demo/dashboard")({ component: Dash, head: () => ({ meta: [{"title": "Dashboard · Demo | Gym Spotter"}, {"name": "description", "content": "Dashboard — Gym Spotter, gestão de academias."}, {"property": "og:title", "content": "Dashboard · Demo | Gym Spotter"}, {"property": "og:description", "content": "Dashboard — Gym Spotter, gestão de academias."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 const fmtBRL = (n: number) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0 });
 const PLAN_COLORS = ["#F97316", "#FACC15", "#10B981", "#3B82F6", "#A855F7"];
@@ -25,8 +25,8 @@ function Dash() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-black tracking-tight text-zinc-900">Dashboard</h1>
-        <p className="text-sm text-zinc-500 mt-1">FitZone Performance · Avenida Paulista, 1000</p>
+        <h1 className="text-3xl font-black tracking-normal text-foreground">Dashboard</h1>
+        <p className="text-sm text-muted-foreground mt-1">FitZone Performance · Avenida Paulista, 1000</p>
       </div>
 
       {/* AI Alerts banner */}
@@ -39,31 +39,31 @@ function Dash() {
 
       {/* 8 KPIs */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Kpi color="from-orange-500 to-orange-600"     icon={Users}       label="Alunos Ativos"   value={K.alunosAtivos.toString()} delta={`+${K.novosMes} este mês`} />
-        <Kpi color="from-emerald-500 to-emerald-600"   icon={Wallet}      label="MRR"             value={fmtBRL(K.mrr)}     delta="+12% MoM" />
-        <Kpi color="from-rose-500 to-rose-600"         icon={ScanLine}    label="Check-ins hoje"  value={K.checkinsHoje.toString()} delta="+18% vs média" />
-        <Kpi color="from-amber-500 to-amber-600"       icon={Activity}    label="Frequência média" value={`${K.frequenciaMedia}/mês`} delta="+1.2 vs trim. ant." />
-        <Kpi color="from-blue-500 to-blue-600"         icon={Wallet}      label="A Receber"       value={fmtBRL(K.aReceber)} delta="-15% MoM (cobrança AI)" />
-        <Kpi color="from-violet-500 to-violet-600"     icon={AlertCircle} label="Inadimplência"   value={`${(K.inadimplenciaRate*100).toFixed(0)}%`} delta={`-2% — ${fmtBRL(K.inadimplencia)}`} />
-        <Kpi color="from-indigo-500 to-indigo-600"     icon={TrendingDown}label="Churn rate"      value={`${(K.churnRate*100).toFixed(0)}%`} delta="-1% vs trim. ant." />
-        <Kpi color="from-[#F97316] to-[#FACC15]"       icon={Crown}       label="Taxa Retenção"   value={`${(K.taxaRetencao*100).toFixed(0)}%`} delta="+3% — top 5% do setor" />
+        <Kpi color="from-primary to-primary"     icon={Users}       label="Alunos Ativos"   value={K.alunosAtivos.toString()} delta={`+${K.novosMes} este mês`} />
+        <Kpi color="from-success to-success"   icon={Wallet}      label="MRR"             value={fmtBRL(K.mrr)}     delta="+12% MoM" />
+        <Kpi color="from-destructive to-destructive"         icon={ScanLine}    label="Check-ins hoje"  value={K.checkinsHoje.toString()} delta="+18% vs média" />
+        <Kpi color="from-warning to-warning"       icon={Activity}    label="Frequência média" value={`${K.frequenciaMedia}/mês`} delta="+1.2 vs trim. ant." />
+        <Kpi color="from-info to-info"         icon={Wallet}      label="A Receber"       value={fmtBRL(K.aReceber)} delta="-15% MoM (cobrança AI)" />
+        <Kpi color="from-chart-5 to-chart-5"     icon={AlertCircle} label="Inadimplência"   value={`${(K.inadimplenciaRate*100).toFixed(0)}%`} delta={`-2% — ${fmtBRL(K.inadimplencia)}`} />
+        <Kpi color="from-chart-4 to-chart-4"     icon={TrendingDown}label="Churn rate"      value={`${(K.churnRate*100).toFixed(0)}%`} delta="-1% vs trim. ant." />
+        <Kpi color="from-primary to-primary"       icon={Crown}       label="Taxa Retenção"   value={`${(K.taxaRetencao*100).toFixed(0)}%`} delta="+3% — top 5% do setor" />
       </div>
 
       {/* Charts */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="border-zinc-200 shadow-sm">
+        <Card className="border-border shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-zinc-900">Check-ins · últimos 14 dias</h3>
-              <Badge className="bg-orange-100 text-orange-700 border-0">média 127/dia</Badge>
+              <h3 className="font-bold text-foreground">Check-ins · últimos 14 dias</h3>
+              <Badge className="bg-primary/15 text-primary border-0">média 127/dia</Badge>
             </div>
             <div className="h-64">
               <ResponsiveContainer>
                 <BarChart data={demoFitZoneCheckinsByDay}>
                   <defs>
                     <linearGradient id="grad-orange" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%"   stopColor="#F97316" />
-                      <stop offset="100%" stopColor="#FACC15" />
+                      <stop offset="0%"   stopColor="var(--primary)" />
+                      <stop offset="100%" stopColor="var(--chart-2)" />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
@@ -77,9 +77,9 @@ function Dash() {
           </CardContent>
         </Card>
 
-        <Card className="border-zinc-200 shadow-sm">
+        <Card className="border-border shadow-sm">
           <CardContent className="p-6">
-            <h3 className="font-bold text-zinc-900 mb-4">Distribuição por plano</h3>
+            <h3 className="font-bold text-foreground mb-4">Distribuição por plano</h3>
             <div className="h-64">
               <ResponsiveContainer>
                 <PieChart>
@@ -94,8 +94,8 @@ function Dash() {
               {planData.map((p, i) => (
                 <div key={i} className="flex items-center gap-2">
                   <span className="h-3 w-3 rounded-sm" style={{ background: PLAN_COLORS[i % PLAN_COLORS.length] }} />
-                  <span className="text-zinc-700 truncate">{p.name}</span>
-                  <span className="text-zinc-500 ml-auto font-medium">{p.value}</span>
+                  <span className="text-muted-foreground truncate">{p.name}</span>
+                  <span className="text-muted-foreground ml-auto font-medium">{p.value}</span>
                 </div>
               ))}
             </div>
@@ -104,23 +104,23 @@ function Dash() {
       </div>
 
       {/* Check-ins de hoje */}
-      <Card className="border-zinc-200 shadow-sm">
+      <Card className="border-border shadow-sm">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-zinc-900">Check-ins de hoje</h3>
-            <Link to="/demo/checkins" className="text-xs text-[#F97316] font-semibold hover:underline">Ver todos os 142 →</Link>
+            <h3 className="font-bold text-foreground">Check-ins de hoje</h3>
+            <Link to="/demo/checkins" className="text-xs text-primary font-semibold hover:underline">Ver todos os 142 →</Link>
           </div>
           <div className="space-y-2">
             {demoFitZoneCheckinsHoje.map(c => (
-              <div key={c.id} className="flex items-center gap-3 py-2 border-b border-zinc-100 last:border-0">
+              <div key={c.id} className="flex items-center gap-3 py-2 border-b border-border last:border-0">
                 <img src={c.photo_url} alt="" className="h-9 w-9 rounded-full object-cover" />
                 <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-sm text-zinc-900">{c.student_name}</div>
-                  <div className="text-xs text-zinc-500 truncate">{c.plan_name} · prof. {c.professor}</div>
+                  <div className="font-semibold text-sm text-muted-foreground">{c.student_name}</div>
+                  <div className="text-xs text-muted-foreground truncate">{c.plan_name} · prof. {c.professor}</div>
                 </div>
-                <Badge variant="outline" className="border-zinc-200 text-zinc-700 text-xs">{c.modalidade}</Badge>
-                <div className="text-xs font-mono text-zinc-500 w-12 text-right">{c.hora}</div>
-                <Badge className="bg-emerald-100 text-emerald-700 border-0 text-[10px]">ENTRADA</Badge>
+                <Badge variant="outline" className="border-border text-muted-foreground text-xs">{c.modalidade}</Badge>
+                <div className="text-xs font-mono text-muted-foreground w-12 text-right">{c.hora}</div>
+                <Badge className="bg-success/15 text-success border-0 text-[10px]">ENTRADA</Badge>
               </div>
             ))}
           </div>
@@ -129,24 +129,24 @@ function Dash() {
 
       {/* Renovações + Aniversariantes */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="border-zinc-200 shadow-sm">
+        <Card className="border-border shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-zinc-900">⏰ Planos perto do vencimento</h3>
-              <Badge className="bg-amber-100 text-amber-700 border-0">{demoFitZoneVencendo.length} alunos</Badge>
+              <h3 className="font-bold text-foreground">⏰ Planos perto do vencimento</h3>
+              <Badge className="bg-warning/15 text-warning border-0">{demoFitZoneVencendo.length} alunos</Badge>
             </div>
             <div className="space-y-2">
               {demoFitZoneVencendo.map(v => (
-                <div key={v.id} className="flex items-center justify-between py-2 border-b border-zinc-100 last:border-0">
+                <div key={v.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
                   <div>
-                    <div className="font-semibold text-sm text-zinc-900">{v.name}</div>
-                    <div className="text-xs text-zinc-500">{v.plan_name} · {fmtBRL(v.valor)}</div>
+                    <div className="font-semibold text-sm text-muted-foreground">{v.name}</div>
+                    <div className="text-xs text-muted-foreground">{v.plan_name} · {fmtBRL(v.valor)}</div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={`text-xs font-bold ${v.dias <= 3 ? "text-red-600" : "text-amber-600"}`}>
+                    <span className={`text-xs font-bold ${v.dias <= 3 ? "text-destructive" : "text-warning"}`}>
                       {v.dias === 1 ? "Vence amanhã" : `${v.dias}d`}
                     </span>
-                    <Button size="sm" className="h-7 bg-gradient-to-r from-[#F97316] to-[#FACC15] text-white border-0 hover:opacity-90">Renovar</Button>
+                    <Button size="sm" className="h-7 bg-gradient-to-r from-primary to-primary text-foreground border-0 hover:opacity-90">Renovar</Button>
                   </div>
                 </div>
               ))}
@@ -154,22 +154,22 @@ function Dash() {
           </CardContent>
         </Card>
 
-        <Card className="border-zinc-200 shadow-sm">
+        <Card className="border-border shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-zinc-900 flex items-center gap-2"><Cake className="h-4 w-4 text-pink-500" />Aniversariantes da semana</h3>
-              <Badge className="bg-pink-100 text-pink-700 border-0">{demoFitZoneAniversariantes.length}</Badge>
+              <h3 className="font-bold text-foreground flex items-center gap-2"><Cake className="h-4 w-4 text-chart-5" />Aniversariantes da semana</h3>
+              <Badge className="bg-chart-5/15 text-chart-5 border-0">{demoFitZoneAniversariantes.length}</Badge>
             </div>
             <div className="space-y-2">
               {demoFitZoneAniversariantes.map(a => (
-                <div key={a.id} className="flex items-center justify-between py-2 border-b border-zinc-100 last:border-0">
+                <div key={a.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
                   <div>
-                    <div className="font-semibold text-sm text-zinc-900">{a.name}</div>
-                    <div className="text-xs text-zinc-500">{a.plan_name} · {a.idade} anos</div>
+                    <div className="font-semibold text-sm text-muted-foreground">{a.name}</div>
+                    <div className="text-xs text-muted-foreground">{a.plan_name} · {a.idade} anos</div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-pink-600">{a.date}</span>
-                    <Button size="sm" variant="outline" className="h-7 border-pink-200 text-pink-700 hover:bg-pink-50"><MessageCircle className="h-3 w-3 mr-1" />Parabenizar</Button>
+                    <span className="text-xs font-bold text-chart-5">{a.date}</span>
+                    <Button size="sm" variant="outline" className="h-7 border-chart-5/30 text-chart-5 hover:bg-chart-5/15"><MessageCircle className="h-3 w-3 mr-1" />Parabenizar</Button>
                   </div>
                 </div>
               ))}
@@ -179,20 +179,20 @@ function Dash() {
       </div>
 
       {/* AI Banner */}
-      <Card className="border-0 bg-gradient-to-br from-[#18181B] via-[#27272A] to-[#18181B] text-white overflow-hidden relative">
+      <Card className="border-0 bg-gradient-to-br from-background via-background to-background text-foreground overflow-hidden relative">
         <CardContent className="p-8 relative z-10">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
-              <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-[#F97316] to-[#FACC15] flex items-center justify-center">
-                <Sparkles className="h-7 w-7 text-white" />
+              <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-primary to-primary flex items-center justify-center">
+                <Sparkles className="h-7 w-7 text-foreground" />
               </div>
               <div>
-                <div className="text-xs uppercase tracking-widest text-[#FACC15] font-bold">AI GROWTH ENGINE</div>
+                <div className="text-xs uppercase tracking-widest text-primary font-bold">AI GROWTH ENGINE</div>
                 <h3 className="text-2xl font-black">6 oportunidades detectadas hoje</h3>
-                <p className="text-sm text-white/60 mt-1">Receita potencial recuperável: <span className="text-[#FACC15] font-bold">R$ 14.200</span></p>
+                <p className="text-sm text-foreground/60 mt-1">Receita potencial recuperável: <span className="text-primary font-bold">R$ 14.200</span></p>
               </div>
             </div>
-            <Button asChild className="bg-gradient-to-r from-[#F97316] to-[#FACC15] text-white border-0 hover:opacity-90 h-11 px-6 font-bold">
+            <Button asChild className="bg-gradient-to-r from-primary to-primary text-foreground border-0 hover:opacity-90 h-11 px-6 font-bold">
               <Link to="/demo/aigrowth">Abrir AI Growth <ArrowUpRight className="h-4 w-4 ml-1" /></Link>
             </Button>
           </div>
@@ -204,16 +204,16 @@ function Dash() {
 
 function Kpi({ color, icon: Icon, label, value, delta }: { color: string; icon: typeof Users; label: string; value: string; delta: string }) {
   return (
-    <Card className="border-zinc-200 shadow-sm hover:shadow-md transition overflow-hidden">
+    <Card className="border-border shadow-sm hover:shadow-md transition overflow-hidden">
       <CardContent className="p-5">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-bold uppercase tracking-wider text-zinc-500">{label}</span>
+          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{label}</span>
           <div className={`h-8 w-8 rounded-lg bg-gradient-to-br ${color} flex items-center justify-center`}>
-            <Icon className="h-4 w-4 text-white" />
+            <Icon className="h-4 w-4 text-foreground" />
           </div>
         </div>
-        <div className="text-3xl font-black text-zinc-900">{value}</div>
-        <div className="text-xs text-zinc-500 mt-1">{delta}</div>
+        <div className="text-3xl font-black text-muted-foreground">{value}</div>
+        <div className="text-xs text-muted-foreground mt-1">{delta}</div>
       </CardContent>
     </Card>
   );
@@ -221,17 +221,17 @@ function Kpi({ color, icon: Icon, label, value, delta }: { color: string; icon: 
 
 function AlertCard({ tone, icon: Icon, title, sub, cta }: { tone: "red"|"amber"|"orange"|"emerald"; icon: typeof Users; title: string; sub: string; cta: string }) {
   const map = {
-    red:     { bg:"bg-red-50",     bd:"border-red-200",     ic:"bg-red-500",     tx:"text-red-900", st:"text-red-700" },
-    amber:   { bg:"bg-amber-50",   bd:"border-amber-200",   ic:"bg-amber-500",   tx:"text-amber-900", st:"text-amber-700" },
-    orange:  { bg:"bg-orange-50",  bd:"border-orange-200",  ic:"bg-orange-500",  tx:"text-orange-900", st:"text-orange-700" },
-    emerald: { bg:"bg-emerald-50", bd:"border-emerald-200", ic:"bg-emerald-500", tx:"text-emerald-900", st:"text-emerald-700" },
+    red:     { bg:"bg-destructive/15",     bd:"border-destructive/30",     ic:"bg-destructive",     tx:"text-destructive", st:"text-destructive" },
+    amber:   { bg:"bg-warning/15",   bd:"border-warning/30",   ic:"bg-warning",   tx:"text-warning", st:"text-warning" },
+    orange:  { bg:"bg-primary/15",  bd:"border-primary/30",  ic:"bg-primary",  tx:"text-primary", st:"text-primary" },
+    emerald: { bg:"bg-success/15", bd:"border-success/30", ic:"bg-success", tx:"text-success", st:"text-success" },
   }[tone];
   return (
     <Card className={`${map.bg} ${map.bd} border shadow-sm`}>
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
           <div className={`h-9 w-9 rounded-lg ${map.ic} flex items-center justify-center shrink-0`}>
-            <Icon className="h-4 w-4 text-white" />
+            <Icon className="h-4 w-4 text-foreground" />
           </div>
           <div className="flex-1 min-w-0">
             <div className={`text-sm font-bold ${map.tx}`}>{title}</div>

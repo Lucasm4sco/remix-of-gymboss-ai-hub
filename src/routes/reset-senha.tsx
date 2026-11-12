@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/reset-senha")({ component: Reset });
+export const Route = createFileRoute("/reset-senha")({ component: Reset, head: () => ({ meta: [{"title": "Redefinir senha · Acesso | Gym Spotter"}, {"name": "description", "content": "Redefinir senha — Gym Spotter, gestão de academias."}, {"property": "og:title", "content": "Redefinir senha · Acesso | Gym Spotter"}, {"property": "og:description", "content": "Redefinir senha — Gym Spotter, gestão de academias."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 function Reset() {
   const [password, setPassword] = useState("");

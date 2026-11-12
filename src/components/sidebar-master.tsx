@@ -1,5 +1,5 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
-import { Building2, BarChart3, PlusSquare, LogOut, Shield, Settings } from "lucide-react";
+import { Building2, BarChart3, PlusSquare, LogOut, Dumbbell, Settings } from "lucide-react";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { useAuth } from "@/lib/auth-context";
 
@@ -18,12 +18,12 @@ export function SidebarMaster() {
     <Sidebar collapsible="icon">
       <SidebarHeader>
         <div className="flex items-center gap-2 px-2 py-1">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-red-700">
-            <Shield className="h-4 w-4 text-white" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/15">
+            <Dumbbell className="h-4 w-4 text-foreground" />
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="text-sm font-semibold">Master</span>
-            <span className="text-xs text-sidebar-foreground/60">Super admin</span>
+            <span className="text-sm font-bold text-sidebar-foreground">Gym Spotter</span>
+            <span className="text-xs text-sidebar-foreground/60">Master · Super admin</span>
           </div>
         </div>
       </SidebarHeader>

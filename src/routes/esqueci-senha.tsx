@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/esqueci-senha")({ component: Esqueci });
+export const Route = createFileRoute("/esqueci-senha")({ component: Esqueci, head: () => ({ meta: [{"title": "Recuperar acesso · Acesso | Gym Spotter"}, {"name": "description", "content": "Recuperar acesso — Gym Spotter, gestão de academias."}, {"property": "og:title", "content": "Recuperar acesso · Acesso | Gym Spotter"}, {"property": "og:description", "content": "Recuperar acesso — Gym Spotter, gestão de academias."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 function Esqueci() {
   const [email, setEmail] = useState("");

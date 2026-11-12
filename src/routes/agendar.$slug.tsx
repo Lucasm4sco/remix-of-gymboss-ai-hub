@@ -22,19 +22,19 @@ export const Route = createFileRoute("/agendar/$slug")({
     return publicBookingSchema.parse(data);
   },
   head: ({ loaderData }) => ({ meta: [
-    { title: `${loaderData?.academy.name ?? "Agendamento"} — GymBoss AI` },
+    { title: `${loaderData?.academy.name ?? "Agendamento"} — Gym Spotter` },
     { name: "description", content: "Planos e horários públicos para solicitar uma aula experimental." },
-    { property: "og:title", content: `${loaderData?.academy.name ?? "Agendamento"} — GymBoss AI` },
+    { property: "og:title", content: `${loaderData?.academy.name ?? "Agendamento"} — Gym Spotter` },
     { property: "og:description", content: "Confira planos e horários de aulas disponíveis." },
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary" },
   ] }),
   component: BookingPage,
   notFoundComponent: () => (
-    <div className="min-h-screen flex items-center justify-center bg-[#151310] text-white p-6">
+    <div className="min-h-screen flex items-center justify-center bg-background text-foreground p-6">
       <div className="text-center">
         <h1 className="text-2xl font-bold mb-2">Academia não encontrada</h1>
-        <p className="text-white/60">Verifique o link e tente novamente.</p>
+        <p className="text-foreground/60">Verifique o link e tente novamente.</p>
       </div>
     </div>
   ),
@@ -51,10 +51,10 @@ function BookingPage() {
       `Olá! Acabei de me inscrever em "${done.label ?? done.kind}" pelo site da ${academy.name}. Pode confirmar?`
     );
     return (
-      <div className="min-h-screen bg-[#151310] text-white flex items-center justify-center p-6">
-        <Card className="max-w-md w-full bg-white text-foreground">
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-6">
+        <Card className="max-w-md w-full bg-card text-foreground">
           <CardContent className="p-8 text-center">
-            <CheckCircle2 className="h-16 w-16 mx-auto text-emerald-500 mb-4" />
+            <CheckCircle2 className="h-16 w-16 mx-auto text-success mb-4" />
             <h2 className="text-2xl font-bold mb-2">Cadastro recebido!</h2>
             <p className="text-muted-foreground mb-4">
               {academy.name} vai te chamar no WhatsApp para confirmar. Para acelerar, fale agora com a recepção:
@@ -74,22 +74,22 @@ function BookingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#151310] text-white">
-      <header className="border-b border-white/10 p-6 flex items-center gap-3 max-w-4xl mx-auto">
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="border-b border-border/10 p-6 flex items-center gap-3 max-w-4xl mx-auto">
         <div className="h-10 w-10 rounded-lg flex items-center justify-center" style={{ background: brand }}>
-          <Dumbbell className="h-5 w-5 text-white" />
+          <Dumbbell className="h-5 w-5 text-foreground" />
         </div>
         <div>
           <div className="font-bold text-lg">{academy.name}</div>
-          <div className="text-xs text-white/60">Matrícula online · Aula experimental grátis</div>
+          <div className="text-xs text-foreground/60">Matrícula online · Aula experimental grátis</div>
         </div>
       </header>
       <main className="max-w-4xl mx-auto p-6">
         <Tabs defaultValue="experimental" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 bg-white/5 h-auto p-1">
-            <TabsTrigger value="experimental" className="data-[state=active]:bg-white data-[state=active]:text-foreground py-2">Aula experimental</TabsTrigger>
-            <TabsTrigger value="trial" className="data-[state=active]:bg-white data-[state=active]:text-foreground py-2">Trial 7 dias</TabsTrigger>
-            <TabsTrigger value="planos" className="data-[state=active]:bg-white data-[state=active]:text-foreground py-2">Ver planos</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 bg-card/5 h-auto p-1">
+            <TabsTrigger value="experimental" className="data-[state=active]:bg-card data-[state=active]:text-foreground py-2">Aula experimental</TabsTrigger>
+            <TabsTrigger value="trial" className="data-[state=active]:bg-card data-[state=active]:text-foreground py-2">Trial 7 dias</TabsTrigger>
+            <TabsTrigger value="planos" className="data-[state=active]:bg-card data-[state=active]:text-foreground py-2">Ver planos</TabsTrigger>
           </TabsList>
 
           <TabsContent value="experimental" className="mt-6">
@@ -136,7 +136,7 @@ function ExperimentalForm({ schedule, brand, onDone }: { schedule: ScheduleItem[
   };
 
   return (
-    <Card className="bg-white text-foreground">
+    <Card className="bg-card text-foreground">
       <CardContent className="p-6 space-y-6">
         <div>
           <h2 className="text-xl font-bold flex items-center gap-2"><Sparkles className="h-5 w-5" style={{ color: brand }} /> Aula experimental grátis</h2>
@@ -216,7 +216,7 @@ function TrialForm({ brand, onDone }: { brand: string; onDone: () => void }) {
     onDone();
   };
   return (
-    <Card className="bg-white text-foreground">
+    <Card className="bg-card text-foreground">
       <CardContent className="p-6 space-y-4">
         <div>
           <h2 className="text-xl font-bold flex items-center gap-2"><Calendar className="h-5 w-5" style={{ color: brand }}/> Trial 7 dias grátis</h2>
@@ -263,7 +263,7 @@ function PlansGrid({ plans, brand, onPick }: { plans: Array<{ id: string; name: 
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
       {plans.map(p => (
-        <Card key={p.id} className={`bg-white text-foreground ${p.featured ? "ring-2" : ""}`} style={p.featured ? { boxShadow: `0 0 0 2px ${brand}` } : {}}>
+        <Card key={p.id} className={`bg-card text-foreground ${p.featured ? "ring-2" : ""}`} style={p.featured ? { boxShadow: `0 0 0 2px ${brand}` } : {}}>
           <CardContent className="p-6 flex flex-col h-full">
             {p.featured && <div className="text-xs font-bold mb-2 uppercase tracking-wide" style={{ color: brand }}>Mais popular</div>}
             <div className="text-lg font-bold">{p.name}</div>
@@ -277,7 +277,7 @@ function PlansGrid({ plans, brand, onPick }: { plans: Array<{ id: string; name: 
           </CardContent>
         </Card>
       ))}
-      {plans.length === 0 && <p className="text-white/70 col-span-full text-center">Nenhum plano cadastrado.</p>}
+      {plans.length === 0 && <p className="text-foreground/70 col-span-full text-center">Nenhum plano cadastrado.</p>}
 
       <Dialog open={!!pick} onOpenChange={(o) => { if(!o) setPick(null); }}>
         <DialogContent>

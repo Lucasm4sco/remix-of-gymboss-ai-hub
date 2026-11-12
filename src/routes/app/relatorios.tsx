@@ -7,7 +7,7 @@ import { ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, Tool
 import { demoFaturamento12m, demoTopModalidades, demoAlunosEvolution12m, demoCheckinsByHour } from "@/lib/demo-data";
 import { fmtBRL } from "@/lib/format";
 
-export const Route = createFileRoute("/app/relatorios")({ component: RelatoriosPage });
+export const Route = createFileRoute("/app/relatorios")({ component: RelatoriosPage, head: () => ({ meta: [{"title": "Relatórios · Academia | Gym Spotter"}, {"name": "description", "content": "Relatórios — Gym Spotter, gestão de academias."}, {"property": "og:title", "content": "Relatórios · Academia | Gym Spotter"}, {"property": "og:description", "content": "Relatórios — Gym Spotter, gestão de academias."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 const COLORS = ["#D97634", "#E8935D", "#22C55E", "#3B82F6", "#A855F7", "#EAB308", "#EC4899", "#06B6D4"];
 
@@ -24,10 +24,10 @@ function RelatoriosPage() {
     <div className="print:p-0">
       <div className="flex items-start justify-between print:hidden">
         <PageHeader title="Relatórios" description="Visão completa de desempenho da academia." />
-        <Button onClick={() => window.print()} className="gap-2 bg-[#D97634] hover:bg-[#D97634]/90"><Printer className="h-4 w-4" /> Exportar PDF</Button>
+        <Button onClick={() => window.print()} className="gap-2 bg-primary hover:bg-primary/90"><Printer className="h-4 w-4" /> Exportar PDF</Button>
       </div>
       <div className="hidden print:block mb-6">
-        <h1 className="text-2xl font-bold">Relatório GymBoss AI</h1>
+        <h1 className="text-2xl font-bold">Relatório Gym Spotter</h1>
         <p className="text-sm text-muted-foreground">Gerado em {new Date().toLocaleString("pt-BR")}</p>
       </div>
 
@@ -50,7 +50,7 @@ function RelatoriosPage() {
           <div className="h-72"><ResponsiveContainer>
             <LineChart data={retencao}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.3} /><XAxis dataKey="month" /><YAxis domain={[60, 100]} /><Tooltip />
-              <Line type="monotone" dataKey="retencao" stroke="#D97634" strokeWidth={3} dot={{ fill: "#D97634" }} />
+              <Line type="monotone" dataKey="retencao" stroke="var(--primary)" strokeWidth={3} dot={{ fill: "var(--primary)" }} />
             </LineChart>
           </ResponsiveContainer></div>
         </CardContent></Card>
@@ -74,7 +74,7 @@ function RelatoriosPage() {
           <div className="h-72"><ResponsiveContainer>
             <BarChart data={horarios}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.3} /><XAxis dataKey="hour" /><YAxis /><Tooltip />
-              <Bar dataKey="count" fill="#D97634" radius={[4,4,0,0]} />
+              <Bar dataKey="count" fill="var(--primary)" radius={[4,4,0,0]} />
             </BarChart>
           </ResponsiveContainer></div>
         </CardContent></Card>
@@ -85,7 +85,7 @@ function RelatoriosPage() {
           <div className="h-64"><ResponsiveContainer>
             <LineChart data={evolucao}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.3} /><XAxis dataKey="month" /><YAxis /><Tooltip />
-              <Line type="monotone" dataKey="alunos" stroke="#D97634" strokeWidth={3} dot={{ fill: "#D97634" }} />
+              <Line type="monotone" dataKey="alunos" stroke="var(--primary)" strokeWidth={3} dot={{ fill: "var(--primary)" }} />
             </LineChart>
           </ResponsiveContainer></div>
         </CardContent></Card>
