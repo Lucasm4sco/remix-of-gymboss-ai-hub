@@ -18,7 +18,7 @@ import { fmtBRL } from "@/lib/format";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/master/listaAcademias")({ component: Lista });
+export const Route = createFileRoute("/master/listaAcademias")({ component: Lista, head: () => ({ meta: [{"title": "Academias · Master | Gym Spotter"}, {"name": "description", "content": "Academias — gestão Master no Gym Spotter."}, {"property": "og:title", "content": "Academias · Master | Gym Spotter"}, {"property": "og:description", "content": "Academias — gestão Master no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 function Lista() {
   const { data: rows, refetch } = useQuery({

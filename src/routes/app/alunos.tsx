@@ -17,7 +17,7 @@ import { Plus, Search, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { fmtDate } from "@/lib/format";
 
-export const Route = createFileRoute("/app/alunos")({ component: Alunos });
+export const Route = createFileRoute("/app/alunos")({ component: Alunos, head: () => ({ meta: [{"title": "Alunos · Academia | Gym Spotter"}, {"name": "description", "content": "Alunos — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "Alunos · Academia | Gym Spotter"}, {"property": "og:description", "content": "Alunos — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 function Alunos() {
   const { tenant } = useTenant();

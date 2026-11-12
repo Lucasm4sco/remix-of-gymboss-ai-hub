@@ -12,7 +12,7 @@ import { format, subDays, startOfMonth } from "date-fns";
 import { demoAulasHoje, demoAIOpportunities, demoAlunosEvolution12m } from "@/lib/demo-data";
 import { BookingLinkCard } from "@/components/booking-link-card";
 
-export const Route = createFileRoute("/app/dashboard")({ component: Dashboard });
+export const Route = createFileRoute("/app/dashboard")({ component: Dashboard, head: () => ({ meta: [{"title": "Painel da Academia · Academia | Gym Spotter"}, {"name": "description", "content": "Painel da Academia — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "Painel da Academia · Academia | Gym Spotter"}, {"property": "og:description", "content": "Painel da Academia — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 function Dashboard() {
   const { tenant } = useTenant();

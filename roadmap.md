@@ -10,3 +10,6 @@
 - [x] Restrict public booking reads to an explicit public projection and validate public submissions.
 - [x] Verify visitor plans/form, invalid submission rejection and authenticated owner Master access.
 - [ ] Review deep-scan result when delivered; the scan started before these fixes and may cite old code.
+# Dashboard visual identity
+- [x] Apply the new brand and scoped forest/emerald/teal glass presentation to both panel areas without changing data or handlers.
+- [ ] Verify authenticated rendering, navigation, dialogs, and mobile presentation without writes.

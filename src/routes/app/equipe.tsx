@@ -14,7 +14,7 @@ import { FormDialog } from "@/components/form-dialog";
 import { Plus, Users, Calendar } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/app/equipe")({ component: Equipe });
+export const Route = createFileRoute("/app/equipe")({ component: Equipe, head: () => ({ meta: [{"title": "Equipe · Academia | Gym Spotter"}, {"name": "description", "content": "Equipe — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "Equipe · Academia | Gym Spotter"}, {"property": "og:description", "content": "Equipe — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 const ROLE_LABELS: Record<string, string> = { owner: "Dono", admin: "Admin", professor: "Professor", recepcao: "Recepção", personal: "Personal" };
 

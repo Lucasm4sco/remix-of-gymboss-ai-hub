@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { toast } from "sonner";
 import { Building2, MapPin, Phone, User, CreditCard, KeyRound, Copy, MessageCircle, AlertTriangle, ExternalLink } from "lucide-react";
 
-export const Route = createFileRoute("/master/novaAcademia")({ component: Nova });
+export const Route = createFileRoute("/master/novaAcademia")({ component: Nova, head: () => ({ meta: [{"title": "Nova academia · Master | Gym Spotter"}, {"name": "description", "content": "Nova academia — gestão Master no Gym Spotter."}, {"property": "og:title", "content": "Nova academia · Master | Gym Spotter"}, {"property": "og:description", "content": "Nova academia — gestão Master no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 type Credentials = {
   academy_id: string;

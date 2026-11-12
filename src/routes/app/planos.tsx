@@ -14,7 +14,7 @@ import { Plus, Check, Star } from "lucide-react";
 import { toast } from "sonner";
 import { fmtBRL } from "@/lib/format";
 
-export const Route = createFileRoute("/app/planos")({ component: Planos });
+export const Route = createFileRoute("/app/planos")({ component: Planos, head: () => ({ meta: [{"title": "Planos · Academia | Gym Spotter"}, {"name": "description", "content": "Planos — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "Planos · Academia | Gym Spotter"}, {"property": "og:description", "content": "Planos — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 function Planos() {
   const { tenant } = useTenant();

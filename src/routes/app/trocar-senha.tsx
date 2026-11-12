@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/app/trocar-senha")({ component: TrocarSenha });
+export const Route = createFileRoute("/app/trocar-senha")({ component: TrocarSenha, head: () => ({ meta: [{"title": "Trocar senha · Academia | Gym Spotter"}, {"name": "description", "content": "Trocar senha — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "Trocar senha · Academia | Gym Spotter"}, {"property": "og:description", "content": "Trocar senha — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 function TrocarSenha() {
   const navigate = useNavigate();

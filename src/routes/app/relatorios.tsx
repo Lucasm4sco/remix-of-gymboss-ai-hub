@@ -7,7 +7,7 @@ import { ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, Tool
 import { demoFaturamento12m, demoTopModalidades, demoAlunosEvolution12m, demoCheckinsByHour } from "@/lib/demo-data";
 import { fmtBRL } from "@/lib/format";
 
-export const Route = createFileRoute("/app/relatorios")({ component: RelatoriosPage });
+export const Route = createFileRoute("/app/relatorios")({ component: RelatoriosPage, head: () => ({ meta: [{"title": "Relatórios · Academia | Gym Spotter"}, {"name": "description", "content": "Relatórios — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "Relatórios · Academia | Gym Spotter"}, {"property": "og:description", "content": "Relatórios — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 const COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--success)", "var(--chart-3)", "var(--chart-5)", "var(--warning)", "var(--destructive)", "var(--info)"];
 

@@ -3,7 +3,7 @@ import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mail, ExternalLink, Info } from "lucide-react";
 
-export const Route = createFileRoute("/master/configuracoes")({ component: Config });
+export const Route = createFileRoute("/master/configuracoes")({ component: Config, head: () => ({ meta: [{"title": "Configurações · Master | Gym Spotter"}, {"name": "description", "content": "Configurações — gestão Master no Gym Spotter."}, {"property": "og:title", "content": "Configurações · Master | Gym Spotter"}, {"property": "og:description", "content": "Configurações — gestão Master no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 function Config() {
   return (

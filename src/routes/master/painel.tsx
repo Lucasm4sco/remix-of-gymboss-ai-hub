@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { demoMasterAcademies } from "@/lib/demo-data";
 import { fmtBRL } from "@/lib/format";
 
-export const Route = createFileRoute("/master/painel")({ component: Painel });
+export const Route = createFileRoute("/master/painel")({ component: Painel, head: () => ({ meta: [{"title": "Painel Master · Master | Gym Spotter"}, {"name": "description", "content": "Painel Master — gestão Master no Gym Spotter."}, {"property": "og:title", "content": "Painel Master · Master | Gym Spotter"}, {"property": "og:description", "content": "Painel Master — gestão Master no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 function Painel() {
   const { data } = useQuery({

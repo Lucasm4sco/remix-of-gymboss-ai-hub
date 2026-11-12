@@ -15,7 +15,7 @@ import { Plus } from "lucide-react";
 import { DragDropContext, Droppable, Draggable, type DropResult } from "@hello-pangea/dnd";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/app/agenda")({ component: Agenda });
+export const Route = createFileRoute("/app/agenda")({ component: Agenda, head: () => ({ meta: [{"title": "Agenda · Academia | Gym Spotter"}, {"name": "description", "content": "Agenda — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "Agenda · Academia | Gym Spotter"}, {"property": "og:description", "content": "Agenda — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 const DAYS = [
   { i: 1, label: "Segunda" }, { i: 2, label: "Terça" }, { i: 3, label: "Quarta" },

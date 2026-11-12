@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import { fmtBRL, fmtDate } from "@/lib/format";
 import { format, startOfMonth } from "date-fns";
 
-export const Route = createFileRoute("/app/financeiro")({ component: Financeiro });
+export const Route = createFileRoute("/app/financeiro")({ component: Financeiro, head: () => ({ meta: [{"title": "Financeiro · Academia | Gym Spotter"}, {"name": "description", "content": "Financeiro — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "Financeiro · Academia | Gym Spotter"}, {"property": "og:description", "content": "Financeiro — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 function Financeiro() {
   const { tenant } = useTenant(); const aid = tenant?.academyId; const qc = useQueryClient();

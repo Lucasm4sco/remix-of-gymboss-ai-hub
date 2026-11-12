@@ -9,7 +9,7 @@ import { Sparkles, Users, Wallet, Calendar, TrendingUp, MessageCircle, Send } fr
 import { demoAIOpportunities, demoAcademy } from "@/lib/demo-data";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/app/aigrowth")({ component: AIGrowth });
+export const Route = createFileRoute("/app/aigrowth")({ component: AIGrowth, head: () => ({ meta: [{"title": "AI Growth · Academia | Gym Spotter"}, {"name": "description", "content": "AI Growth — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "AI Growth · Academia | Gym Spotter"}, {"property": "og:description", "content": "AI Growth — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 const ICONS: Record<string, any> = { users: Users, wallet: Wallet, calendar: Calendar, sparkles: TrendingUp };
 const SEV: Record<string, string> = {

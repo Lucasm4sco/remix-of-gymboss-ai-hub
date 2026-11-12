@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Check } from "lucide-react";
 
-export const Route = createFileRoute("/app/onboarding")({ component: Onboarding });
+export const Route = createFileRoute("/app/onboarding")({ component: Onboarding, head: () => ({ meta: [{"title": "Primeiro acesso · Academia | Gym Spotter"}, {"name": "description", "content": "Primeiro acesso — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "Primeiro acesso · Academia | Gym Spotter"}, {"property": "og:description", "content": "Primeiro acesso — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 const STEPS = ["Dados","Branding","Equipe","Planos & Aulas","Finalizar"];
 
