@@ -35,7 +35,7 @@ export function SidebarTenant() {
       <SidebarHeader className="bg-background border-b border-border/5">
         <div className="flex items-center gap-2 px-2 py-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary/15 border border-primary/25">
-            <Dumbbell className="h-5 w-5 text-foreground" />
+            <Dumbbell className="h-5 w-5 text-primary" />
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
             <span className="text-sm font-bold text-foreground">Gym Spotter</span>
@@ -61,7 +61,7 @@ export function SidebarTenant() {
                         <Link to={item.url} className="flex items-center gap-2">
                           <item.icon className={`h-4 w-4 ${item.accent ? "text-primary" : ""}`} />
                           <span>{item.title}</span>
-                          {item.accent && <span className="ml-auto text-[9px] font-bold bg-primary text-foreground px-1.5 py-0.5 rounded">IA</span>}
+                          {item.accent && <span className="ml-auto text-[9px] font-bold bg-primary text-primary-foreground px-1.5 py-0.5 rounded">IA</span>}
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>

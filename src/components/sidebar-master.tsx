@@ -19,7 +19,7 @@ export function SidebarMaster() {
       <SidebarHeader>
         <div className="flex items-center gap-2 px-2 py-1">
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/15">
-            <Dumbbell className="h-4 w-4 text-foreground" />
+            <Dumbbell className="h-4 w-4 text-primary" />
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
             <span className="text-sm font-bold text-sidebar-foreground">Gym Spotter</span>

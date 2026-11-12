@@ -13,5 +13,5 @@
 
 # Modern Dark identity
 - [x] Apply the requested brand copy and shared neutral dark/orange presentation without changing handlers or data.
-- [ ] Verify tests, automatic compilation, and desktop/mobile authenticated Master presentation.
-- [ ] Verify the client dashboard with an authorized tenant session.
+- [x] Verify eight tests, automatic compilation, authenticated Master navigation and desktop/mobile layouts without overflow; lint reports 2504 errors and 8 warnings, left unchanged outside visual scope.
+- [ ] Verify Gabriel's client dashboard: blocked by lack of an authorized session for that account; shared Academy layout verified through onboarding only.
