@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Dumbbell, Users, DollarSign, Calendar, UserPlus, BarChart, Globe, ArrowRight } from "lucide-react";
+import { Check, Dumbbell, Users, DollarSign, Calendar, UserPlus, BarChart, Globe, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -22,6 +22,12 @@ const recursos = [
   { icon: UserPlus, t: "Leads", d: "Acompanhe os cadastros recebidos pelo link público da academia e atualize o status de cada contato." },
   { icon: BarChart, t: "Relatórios", d: "Consulte informações sobre faturamento, retenção, modalidades, horários e evolução de alunos. A tela também oferece exportação em PDF." },
   { icon: Globe, t: "Link público da academia", d: "Apresente os planos disponíveis e receba solicitações de aula experimental." },
+];
+
+const planos = [
+  { n: "Start", p: "97", d: "Ideal para estúdios.", f: ["Gestão de até 50 alunos", "Agenda"] },
+  { n: "Pro", p: "197", d: "O mais popular", destaque: true, f: ["Alunos ilimitados", "Financeiro completo", "Suporte prioritário"] },
+  { n: "Elite", p: "397", d: "Para redes de academias.", f: ["Múltiplas unidades", "Relatórios avançados"] },
 ];
 
 const passos = [
@@ -94,6 +100,32 @@ function Landing() {
               <p className="mt-1 text-sm text-muted-foreground">{r.d}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section id="planos" className="border-t border-border py-20 scroll-mt-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-black text-center mb-12">Planos e Preços</h2>
+          <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto items-stretch">
+            {planos.map(pl => (
+              <div key={pl.n} className={`relative flex flex-col rounded-xl border bg-card p-6 ${pl.destaque ? "border-primary border-2 shadow-lg shadow-primary/20 md:-translate-y-2" : "border-border"}`}>
+                {pl.destaque && <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-xs font-black uppercase tracking-wide text-primary-foreground whitespace-nowrap">O mais popular</span>}
+                <h3 className="text-xl font-black">{pl.n}</h3>
+                {!pl.destaque && <p className="mt-1 text-sm text-muted-foreground">{pl.d}</p>}
+                <div className="mt-4 flex items-baseline gap-1">
+                  <span className={`text-4xl font-black ${pl.destaque ? "text-primary" : ""}`}>R$ {pl.p}</span>
+                  <span className="text-muted-foreground">/mês</span>
+                </div>
+                <ul className="mt-6 space-y-2 flex-1">
+                  {pl.f.map(x => (
+                    <li key={x} className="flex items-start gap-2 text-sm"><Check className="h-4 w-4 mt-0.5 shrink-0 text-primary" />{x}</li>
+                  ))}
+                </ul>
+                <Button asChild variant={pl.destaque ? "default" : "outline"} className="mt-6 w-full font-bold"><Link to="/entrar">Assinar Agora</Link></Button>
+              </div>
+            ))}
+          </div>
+          <p className="mt-10 text-center text-muted-foreground">Teste grátis por 7 dias. Sem taxas de instalação.</p>
         </div>
       </section>
 
