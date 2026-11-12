@@ -51,6 +51,10 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-qr-surface: var(--qr-surface);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -62,6 +66,10 @@
 }
 
 :root {
+  --success: oklch(0.68 0.16 160);
+  --warning: oklch(0.78 0.14 85);
+  --info: oklch(0.75 0.12 195);
+  --qr-surface: oklch(1 0 0);
   --radius: 0.625rem;
   /* Brand: #D97634 orange */
   --brand: oklch(0.673 0.156 49);
@@ -148,4 +156,98 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
+}
+
+/* Dashboard-only identity; public pages retain their existing presentation. */
+html:has(.spotter-panel) {
+  color-scheme: dark;
+  --radius: 0.5rem;
+  --background: oklch(0.17 0.026 165);
+  --foreground: oklch(0.95 0.013 160);
+  --card: oklch(0.25 0.035 175 / 70%);
+  --card-foreground: var(--foreground);
+  --popover: oklch(0.23 0.032 172 / 96%);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.78 0.17 160);
+  --primary-foreground: oklch(0.19 0.04 163);
+  --secondary: oklch(0.29 0.038 170);
+  --secondary-foreground: oklch(0.92 0.025 163);
+  --muted: oklch(0.25 0.03 172);
+  --muted-foreground: oklch(0.73 0.027 172);
+  --accent: oklch(0.37 0.065 177 / 45%);
+  --accent-foreground: oklch(0.87 0.11 164);
+  --destructive: oklch(0.75 0.16 25);
+  --destructive-foreground: oklch(0.18 0.035 25);
+  --success: oklch(0.8 0.15 158);
+  --warning: oklch(0.84 0.13 85);
+  --info: oklch(0.79 0.1 195);
+  --border: oklch(0.65 0.07 174 / 19%);
+  --input: oklch(0.65 0.07 174 / 28%);
+  --ring: var(--primary);
+  --chart-1: var(--primary);
+  --chart-2: oklch(0.76 0.12 186);
+  --chart-3: oklch(0.8 0.1 215);
+  --chart-4: var(--warning);
+  --chart-5: oklch(0.73 0.09 300);
+  --sidebar: oklch(0.19 0.027 166 / 92%);
+  --sidebar-foreground: oklch(0.86 0.025 170);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: oklch(0.4 0.07 165 / 40%);
+  --sidebar-accent-foreground: var(--primary);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+  --spotter-wash: linear-gradient(125deg, oklch(0.26 0.05 163 / 45%), transparent 50%, oklch(0.28 0.045 190 / 30%));
+  --spotter-shadow: 0 8px 28px oklch(0.09 0.02 170 / 22%);
+  --spotter-glass-highlight: inset 0 1px 0 oklch(0.85 0.05 170 / 7%);
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+}
+.spotter-panel {
+  background: var(--spotter-wash), var(--background);
+  color: var(--foreground);
+  letter-spacing: 0;
+}
+.spotter-panel main { background: transparent; }
+.spotter-panel .bg-card {
+  backdrop-filter: blur(20px) saturate(125%);
+  border-radius: var(--radius);
+  box-shadow: var(--spotter-glass-highlight), var(--spotter-shadow);
+}
+.spotter-panel header, .spotter-panel [data-sidebar="sidebar"] {
+  backdrop-filter: blur(24px) saturate(130%);
+}
+.spotter-panel [data-sidebar="sidebar"] { background: var(--sidebar); }
+.spotter-panel [data-sidebar="menu-button"] { min-height: 2.5rem; }
+.spotter-panel [data-sidebar="menu-button"][data-active="true"] {
+  background: var(--sidebar-accent);
+  color: var(--sidebar-accent-foreground);
+  box-shadow: inset 2px 0 0 var(--primary);
+}
+.spotter-panel .recharts-cartesian-axis-tick text,
+.spotter-panel .recharts-pie-label-text { fill: var(--muted-foreground); }
+.spotter-panel .recharts-cartesian-grid line { stroke: var(--border); }
+.spotter-panel .recharts-default-tooltip {
+  background: var(--popover) !important;
+  border-color: var(--border) !important;
+  color: var(--foreground);
+  border-radius: var(--radius);
+}
+.spotter-panel select, .spotter-panel textarea {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+html:has(.spotter-panel) [role="dialog"],
+html:has(.spotter-panel) [data-radix-popper-content-wrapper] {
+  backdrop-filter: blur(24px);
+}
+@media print {
+  html:has(.spotter-panel) {
+    color-scheme: light;
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.2 0.025 165);
+    --card: oklch(1 0 0);
+    --card-foreground: var(--foreground);
+    --muted-foreground: oklch(0.45 0.02 165);
+  }
+  .spotter-panel { background: var(--background); }
 }

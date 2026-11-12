@@ -64,9 +64,9 @@ function Painel() {
                 <TableCell>
                   <Badge
                     className={
-                      a.status === "ativa" ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
-                      : a.status === "trial" ? "bg-amber-100 text-amber-700 hover:bg-amber-100"
-                      : "bg-red-100 text-red-700 hover:bg-red-100"
+                      a.status === "ativa" ? "bg-success/15 text-success hover:bg-success/20"
+                      : a.status === "trial" ? "bg-warning/15 text-warning hover:bg-warning/20"
+                      : "bg-destructive/15 text-destructive hover:bg-destructive/20"
                     }
                   >{a.status}</Badge>
                 </TableCell>

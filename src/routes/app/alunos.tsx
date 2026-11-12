@@ -58,7 +58,7 @@ function Alunos() {
   return (
     <div>
       <PageHeader title="Alunos" description={`${filtered.length} aluno(s)`} actions={
-        <Button onClick={() => setOpen(true)} className="bg-[#D97634] hover:bg-[#D97634]/90"><Plus className="h-4 w-4" />Novo aluno</Button>
+        <Button onClick={() => setOpen(true)} className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4" />Novo aluno</Button>
       } />
 
       <Card className="mb-4"><CardContent className="p-4 flex flex-wrap gap-3">
@@ -81,18 +81,18 @@ function Alunos() {
         {filtered.map(r => {
           const overdue = r.payment_status === "atrasado";
           return (
-            <Card key={r.id} className={`cursor-pointer hover:shadow-md transition ${overdue ? "border-red-500/40" : ""}`} onClick={() => setDetail(r)}>
+            <Card key={r.id} className={`cursor-pointer hover:shadow-md transition ${overdue ? "border-destructive/40" : ""}`} onClick={() => setDetail(r)}>
               <CardContent className="p-4 flex items-center gap-3">
                 <Avatar className="h-12 w-12">
                   <AvatarImage src={(r as any).photo_url} />
-                  <AvatarFallback className="bg-[#D97634]/10 text-[#D97634] font-semibold">{r.name?.slice(0,2).toUpperCase()}</AvatarFallback>
+                  <AvatarFallback className="bg-primary/10 text-primary font-semibold">{r.name?.slice(0,2).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <div className="font-medium truncate">{r.name}</div>
                   <div className="text-xs text-muted-foreground truncate">{r.plan_name ?? "Sem plano"}</div>
                   <div className="flex items-center gap-2 mt-1">
-                    <Badge variant={r.status === "active" ? "default" : "secondary"} className={r.status === "active" ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100" : ""}>{r.status}</Badge>
-                    {overdue && <Badge className="bg-red-100 text-red-700 hover:bg-red-100"><AlertCircle className="h-3 w-3 mr-1" />Atrasado</Badge>}
+                    <Badge variant={r.status === "active" ? "default" : "secondary"} className={r.status === "active" ? "bg-success/15 text-success hover:bg-success/20" : ""}>{r.status}</Badge>
+                    {overdue && <Badge className="bg-destructive/15 text-destructive hover:bg-destructive/20"><AlertCircle className="h-3 w-3 mr-1" />Atrasado</Badge>}
                   </div>
                 </div>
               </CardContent>
@@ -114,7 +114,7 @@ function Alunos() {
             <div className="col-span-2"><Label>Contato de emergência</Label><Input value={form.emergency_contact} onChange={e=>setForm({...form, emergency_contact: e.target.value})} /></div>
             <div className="col-span-2"><Label>Notas médicas</Label><Input value={form.medical_notes} onChange={e=>setForm({...form, medical_notes: e.target.value})} /></div>
           </div>
-          <Button type="submit" className="w-full bg-[#D97634] hover:bg-[#D97634]/90" disabled={create.isPending}>Salvar</Button>
+          <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={create.isPending}>Salvar</Button>
         </form>
       </FormDialog>
 

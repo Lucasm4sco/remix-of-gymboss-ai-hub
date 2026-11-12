@@ -79,25 +79,25 @@ function Dashboard() {
         <KpiCard label="Alunos ativos"         value={data?.students ?? "—"}  icon={Users} />
         <KpiCard label="Novos cadastros (mês)" value={data?.newStudents ?? "—"} icon={UserPlus} />
         <KpiCard label="Faturamento (mês)"     value={fmtBRL(data?.receita ?? 0)} icon={Wallet} hint="Recebido este mês" />
-        <Card className={data?.overdue ? "border-red-500/40 bg-red-50/40" : ""}>
+        <Card className={data?.overdue ? "border-destructive/40 bg-destructive/5" : ""}>
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-muted-foreground">Mensalidades atrasadas</span>
-              <AlertTriangle className={`h-4 w-4 ${data?.overdue ? "text-red-600" : "text-muted-foreground"}`} />
+              <AlertTriangle className={`h-4 w-4 ${data?.overdue ? "text-destructive" : "text-muted-foreground"}`} />
             </div>
-            <div className={`mt-2 text-3xl font-bold ${data?.overdue ? "text-red-600" : ""}`}>{data?.overdue ?? "—"}</div>
-            {!!data?.overdue && <div className="text-xs text-red-600 mt-1">Cobrar inadimplentes</div>}
+            <div className={`mt-2 text-3xl font-bold ${data?.overdue ? "text-destructive" : ""}`}>{data?.overdue ?? "—"}</div>
+            {!!data?.overdue && <div className="text-xs text-destructive mt-1">Cobrar inadimplentes</div>}
           </CardContent>
         </Card>
         <KpiCard label="Taxa ocupação aulas" value="72%" icon={TrendingUp} hint="Média da semana" />
-        <Card className="border-[#D97634]/30 bg-[#D97634]/5">
+        <Card className="border-primary/30 bg-primary/5">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-[#D97634]">AI Alerts</span>
-              <Sparkles className="h-4 w-4 text-[#D97634]" />
+              <span className="text-sm font-medium text-primary">AI Alerts</span>
+              <Sparkles className="h-4 w-4 text-primary" />
             </div>
-            <div className="mt-2 text-3xl font-bold text-[#D97634]">{ai.length}</div>
-            <div className="text-xs text-[#D97634]/80 mt-1">Oportunidades detectadas</div>
+            <div className="mt-2 text-3xl font-bold text-primary">{ai.length}</div>
+            <div className="text-xs text-primary/80 mt-1">Oportunidades detectadas</div>
           </CardContent>
         </Card>
       </div>
@@ -108,7 +108,7 @@ function Dashboard() {
           <div className="h-64"><ResponsiveContainer>
             <BarChart data={data?.hourChart ?? []}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.3} /><XAxis dataKey="hour" /><YAxis allowDecimals={false} /><Tooltip />
-              <Bar dataKey="count" fill="#D97634" radius={[4,4,0,0]} />
+              <Bar dataKey="count" fill="var(--primary)" radius={[4,4,0,0]} />
             </BarChart>
           </ResponsiveContainer></div>
         </CardContent></Card>
@@ -118,7 +118,7 @@ function Dashboard() {
           <div className="h-64"><ResponsiveContainer>
             <BarChart data={data?.planChart ?? []}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.3} /><XAxis dataKey="plan" /><YAxis allowDecimals={false} /><Tooltip />
-              <Bar dataKey="count" fill="#E8935D" radius={[4,4,0,0]} />
+              <Bar dataKey="count" fill="var(--chart-2)" radius={[4,4,0,0]} />
             </BarChart>
           </ResponsiveContainer></div>
         </CardContent></Card>
@@ -128,7 +128,7 @@ function Dashboard() {
           <div className="h-64"><ResponsiveContainer>
             <LineChart data={evol}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.3} /><XAxis dataKey="month" /><YAxis allowDecimals={false} /><Tooltip /><Legend />
-              <Line type="monotone" dataKey="alunos" stroke="#D97634" strokeWidth={3} dot={{ fill: "#D97634" }} />
+              <Line type="monotone" dataKey="alunos" stroke="var(--primary)" strokeWidth={3} dot={{ fill: "var(--primary)" }} />
             </LineChart>
           </ResponsiveContainer></div>
         </CardContent></Card>
@@ -157,14 +157,14 @@ function Dashboard() {
           )}
         </CardContent></Card>
 
-        <Card className="border-[#D97634]/30"><CardContent className="p-5">
+        <Card className="border-primary/30"><CardContent className="p-5">
           <div className="flex items-center gap-2 mb-3">
-            <Sparkles className="h-4 w-4 text-[#D97634]" />
+            <Sparkles className="h-4 w-4 text-primary" />
             <h3 className="font-semibold">Alertas IA</h3>
           </div>
           <div className="space-y-3">
             {ai.map(o => (
-              <div key={o.id} className="border-l-2 border-[#D97634] pl-3">
+              <div key={o.id} className="border-l-2 border-primary pl-3">
                 <div className="text-sm font-medium">{o.title}</div>
                 <div className="text-xs text-muted-foreground mt-0.5">{o.impact}</div>
               </div>

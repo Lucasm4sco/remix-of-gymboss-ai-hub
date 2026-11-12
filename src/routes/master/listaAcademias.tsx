@@ -127,10 +127,10 @@ function Lista() {
       <Dialog open={!!result} onOpenChange={(o)=>{ if(!o) setResult(null); }}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2"><KeyRound className="h-5 w-5 text-orange-500" />Nova senha gerada</DialogTitle>
+            <DialogTitle className="flex items-center gap-2"><KeyRound className="h-5 w-5 text-primary" />Nova senha gerada</DialogTitle>
             <DialogDescription>Admin de {result?.academia}</DialogDescription>
           </DialogHeader>
-          <div className="rounded-md border border-red-300 bg-red-50 dark:bg-red-950/30 p-3 flex gap-2 text-sm text-red-700 dark:text-red-300">
+          <div className="rounded-md border border-destructive/30 bg-destructive/10 p-3 flex gap-2 text-sm text-destructive">
             <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" /> Esta senha so aparece uma vez.
           </div>
           <div className="bg-muted/50 rounded p-3">
