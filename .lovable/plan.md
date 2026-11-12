@@ -1,80 +1,36 @@
-## GymBoss AI — Plano de implementação
+# Plano: remediar os 3 alertas do sharp
 
-Escopo gigante (SaaS multi-tenant, 4 tiers, ~25 rotas, onboarding, billing, demo, master). Vou entregar em **fases**, cada fase funcional e testável. Pendências ficarão claramente listadas no final.
+## Diagnóstico (somente leitura)
 
-### Premissas
-- **Recomeço**: vou apagar as rotas atuais (`_authenticated/*`, `dashboard`, `alunos`, etc.) e o esquema atual será **estendido** (não dropado) — adicionar `user_roles`, ajustar RLS, novos campos. Dados existentes preservados.
-- **Brand**: `--brand: #D97634`, sidebar tenant `#151310`, master vermelho, surface `#F8F7F3`. Tokens em `src/styles.css` (oklch).
-- **Auth**: Email/senha + Google (broker Lovable). Auto-confirm OFF.
-- **Não implementar**: pagamento real (apenas UI/status mockado), envio de email real, IA real (AIGrowth é shell mockado), reset-senha real (UI + chamada Supabase padrão).
+Árvore atual no bun.lock. É a mesma para os 3 alertas: librsvg, libvips e libheif.
 
-### Fase 1 — Schema & RLS
-Migration única:
-- `user_roles` (user_id, role enum `super_admin|admin|professor|recepcao|personal|demo`, academy_id nullable, UNIQUE)
-- Funções: `is_super_admin()`, `current_academy_id()`, `has_role(_uid,_role)` (SECURITY DEFINER)
-- Reescrever RLS de todas as tabelas existentes para usar `is_super_admin() OR academy_id = current_academy_id()`
-- Adicionar campos faltantes em `academy` (trial_ate default `now()+14d`, valor_mensal, ultimo_acesso)
-- Trigger `handle_new_user` cria `user_roles` default (sem role) — role atribuído no onboarding
-- Seed: `app_config` singleton com super_admin_emails vazio inicialmente
+```text
+package.json -> @cloudflare/vite-plugin 1.33.1
+  ├─ miniflare 4.20260421.0 (exige sharp ^0.34.5) -> sharp 0.34.5
+  └─ wrangler 4.84.1 -> miniflare 4.20260421.0 (mesma instância)
+```
 
-### Fase 2 — Auth & Guards
-- `/entrar` (tabs Entrar | Criar conta, Google OAuth via broker)
-- `/esqueci-senha`, `/reset-senha`, `/trocar-senha`
-- `_app.tsx` layout = TenantGuard (exige role admin/professor/recepcao/personal + academy_id)
-- `_master.tsx` layout = SuperAdminGuard (verifica `is_super_admin()`)
-- `_demo.tsx` layout = público, sem guard, banner CTA
-- Pós-signup → `/app/onboarding` se sem academia; senão `/app/dashboard`
-- TrialBanner global em `_app` (amarelo <3d, laranja inadimplente, vermelho suspenso)
+- Não há outro caminho até o sharp. O app não importa sharp.
+- O miniflare só carrega sharp de forma tardia (`await import("sharp")`), na simulação local do recurso de imagens da Cloudflare. O `wrangler.jsonc` não declara esse recurso, então o sharp não roda no site publicado nem na compilação. Na prática, o risco fica no preview local.
+- Versões que corrigem: 0.35.0 resolve o alerta do libvips, 0.35.4 o do libheif e 0.35.5 o do librsvg. A menor versão que fecha os 3 é a **0.35.5**.
+- Atualizar o plugin não resolve: o mais recente (1.69.0) usa miniflare 5 beta com sharp 0.35.2, ainda afetado pelo librsvg, e arrasta uma troca grande de wrangler e workerd.
+- Plataforma: sharp 0.35.5 pede Node >=20.9 (o sandbox tem 22.23) e traz binários nativos novos de @img/* (linux-x64 e linuxmusl-x64 já existem aqui).
+- **Divergência encontrada:** o package-lock.json resolveu @cloudflare/vite-plugin 1.38.0, miniflare 4.20260521.0 e wrangler 4.94.0, enquanto o bun.lock tem 1.33.1 / 4.20260421.0 / 4.84.1. A sincronização anterior ficou incompleta nesses pacotes e precisa ser corrigida junto.
 
-### Fase 3 — Landing pública `/`
-Hero "Sua academia sob controle", features (6 cards), pricing R$49/99/199, CTAs para `/entrar` e `/demo/dashboard`.
+## Recomendação
 
-### Fase 4 — Demo `/demo/*`
-- Mock data hardcoded em `src/lib/demo-data.ts` (30 alunos BR, 5 planos, 60 checkins últimos 30d, grade aulas)
-- Páginas: Dashboard, Alunos, Planos, Checkins, Financeiro, Relatorios, AIGrowth
-- Banner topo com CTA "Criar conta grátis"
+1. Adicionar ao bloco `overrides` existente: `"sharp": "0.35.5"`. Os outros overrides não mudam.
+2. Fixar `@cloudflare/vite-plugin` em `1.33.1` (versão exata). Assim os dois lockfiles resolvem o mesmo grafo.
+3. Gerar de novo o bun.lock e depois o package-lock.json (`npm install --package-lock-only --ignore-scripts --legacy-peer-deps`). Em seguida, comparar as versões de vite-plugin, miniflare, wrangler, sharp e @img/* nos dois arquivos.
 
-### Fase 5 — Onboarding `/app/onboarding`
-5 steps: Dados academia → Branding (cor/logo) → Equipe (convite emails) → Planos+Grade aulas (modalidades) → Trial confirma. Ao finalizar: cria `academy`, `academy_user` owner, `user_roles` admin, planos, schedules → `/app/dashboard`.
+Risco: o miniflare declara `^0.34.5` e o override ignora essa faixa. A troca de 0.34 para 0.35 pode mudar a API, mas só afeta a simulação local de imagens, que este projeto não usa.
 
-### Fase 6 — Tenant `/app/*`
-Componentes base: `PageHeader`, `KpiCard`, `DataTable`, `FormDialog`, `SidebarTenant`.
-- **Dashboard**: 4 KPIs + gráfico 14d checkins (recharts)
-- **Alunos**: tabela + form (CRUD)
-- **Planos**: tabela + form
-- **Checkins fullscreen**: layout especial, busca grande (F2 focus), botão CTA enorme, lista lateral últimos, KPI hoje
-- **Agenda**: ScheduleGrid semanal (7 cols × horários), modalidades coloridas
-- **Financeiro**: lista receitas/despesas + form
-- **Relatórios**: 3-4 gráficos (receita, checkins, alunos por plano)
-- **AIGrowth**: shell chat mockado com sugestões prontas
-- **Equipe**: lista academy_user + convite
-- **Configurações**: Tabs Academia | Equipe | Aparência | Cobrança
+## Validações
 
-### Fase 7 — Master `/master/*`
-SidebarMaster vermelha.
-- `/master/painel`: MRR, churn, novos, ativas/trial/inadimplentes
-- `/master/listaAcademias`: tabela todas academias
-- `/master/novaAcademia`: form cria academia + owner
+- Rodar de novo a verificação de dependências: esperado 0 alertas do sharp.
+- Confirmar que as versões são iguais no bun.lock e no package-lock.json.
+- Compilação (vite build) e `bun test` (os 8 testes existentes).
+- Abrir o preview local (`/`, `/entrar`) e conferir que o servidor reiniciou sem erro no log.
+- `node -e "import('sharp').then(s=>console.log(s.default.versions))"` para confirmar que o binário nativo carrega.
 
-### Stack/convenções
-- File-based routing: `src/routes/_app/...`, `src/routes/_master/...`, `src/routes/_demo/...`, `src/routes/entrar.tsx`, etc.
-- Queries direto no client com `supabase` + react-query (RLS faz o trabalho). Sem server functions (não precisa para CRUD com RLS).
-- Validação: zod + react-hook-form
-- date-fns com locale pt-BR
-- sonner para toasts
-
-### Pendências/limitações que vão sobrar
-- Pagamento real (Stripe) — UI mockada apenas
-- Envio email convite equipe — apenas grava em `academy_user`
-- AIGrowth — chatbot é shell estático
-- Catraca/integração hardware — checkin manual apenas
-- Logo upload (storage bucket) — input URL apenas no v1
-- Suspensão automática por inadimplência — campo manual em `academy.status`
-
-### Confirmações pedidas antes de começar
-1. **Apagar rotas atuais** (`_authenticated/*`, `login.tsx` etc.) e recomeçar do zero — OK?
-2. **Manter dados existentes** nas tabelas (só adicionar colunas/funções/RLS novas) — OK?
-3. **Sem Stripe real** nesta entrega (cobrança mockada) — OK?
-4. Entregar em **uma única resposta gigante** ou parar/revisar ao fim de cada fase?
-
-Aprove para eu começar pela Fase 1 (migration).
+Se algo falhar, remover o override do sharp e manter os 3 alertas como risco aceito, por ser só de desenvolvimento.
