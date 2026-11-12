@@ -14,7 +14,7 @@ import { Plus, Check, Star } from "lucide-react";
 import { toast } from "sonner";
 import { fmtBRL } from "@/lib/format";
 
-export const Route = createFileRoute("/app/planos")({ component: Planos });
+export const Route = createFileRoute("/app/planos")({ component: Planos, head: () => ({ meta: [{"title": "Planos · Academia | Gym Spotter"}, {"name": "description", "content": "Planos — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "Planos · Academia | Gym Spotter"}, {"property": "og:description", "content": "Planos — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 function Planos() {
   const { tenant } = useTenant();
@@ -35,24 +35,24 @@ function Planos() {
   return (
     <div>
       <PageHeader title="Planos" description={`${rows?.length ?? 0} plano(s) cadastrado(s)`} actions={
-        <Button onClick={() => setOpen(true)} className="bg-[#D97634] hover:bg-[#D97634]/90"><Plus className="h-4 w-4" />Novo plano</Button>
+        <Button onClick={() => setOpen(true)} className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4" />Novo plano</Button>
       } />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {(rows ?? []).map(p => (
-          <Card key={p.id} className={p.featured ? "border-[#D97634] border-2 relative" : ""}>
-            {p.featured && <Badge className="absolute -top-2 right-4 bg-[#D97634] hover:bg-[#D97634]"><Star className="h-3 w-3 mr-1" />Destaque</Badge>}
+          <Card key={p.id} className={p.featured ? "border-primary border-2 relative" : ""}>
+            {p.featured && <Badge className="absolute -top-2 right-4 bg-primary hover:bg-primary"><Star className="h-3 w-3 mr-1" />Destaque</Badge>}
             <CardContent className="p-6">
               <h3 className="text-lg font-bold">{p.name}</h3>
               <p className="text-xs text-muted-foreground mt-1 min-h-[2.5rem]">{p.description ?? ""}</p>
               <div className="mt-4 flex items-baseline gap-1">
-                <span className="text-4xl font-bold text-[#D97634]">{fmtBRL(p.price).replace("R$", "")}</span>
+                <span className="text-4xl font-bold text-primary">{fmtBRL(p.price).replace("R$", "")}</span>
                 <span className="text-sm text-muted-foreground">/ {p.duration_months}m</span>
               </div>
               <div className="mt-4 space-y-2 text-sm">
-                <div className="flex items-center gap-2"><Check className="h-4 w-4 text-emerald-600" />{p.duration_months} {p.duration_months === 1 ? "mês" : "meses"} de acesso</div>
-                {p.included_classes?.map((c: string) => <div key={c} className="flex items-center gap-2"><Check className="h-4 w-4 text-emerald-600" />{c}</div>)}
-                {p.total_checkins && <div className="flex items-center gap-2"><Check className="h-4 w-4 text-emerald-600" />{p.total_checkins} check-ins</div>}
+                <div className="flex items-center gap-2"><Check className="h-4 w-4 text-success" />{p.duration_months} {p.duration_months === 1 ? "mês" : "meses"} de acesso</div>
+                {p.included_classes?.map((c: string) => <div key={c} className="flex items-center gap-2"><Check className="h-4 w-4 text-success" />{c}</div>)}
+                {p.total_checkins && <div className="flex items-center gap-2"><Check className="h-4 w-4 text-success" />{p.total_checkins} check-ins</div>}
               </div>
               <Button variant="outline" className="w-full mt-5">Editar</Button>
             </CardContent>
@@ -70,7 +70,7 @@ function Planos() {
             <div><Label>Duração (meses)</Label><Input type="number" value={form.duration_months} onChange={(e)=>setForm({...form, duration_months: Number(e.target.value)})} required /></div>
           </div>
           <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.featured} onChange={e=>setForm({...form, featured: e.target.checked})} />Destaque</label>
-          <Button type="submit" className="w-full bg-[#D97634] hover:bg-[#D97634]/90" disabled={create.isPending}>Salvar</Button>
+          <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={create.isPending}>Salvar</Button>
         </form>
       </FormDialog>
     </div>

@@ -27,14 +27,14 @@ export function BookingLinkCard({ slug, compact = false }: { slug: string; compa
   };
 
   return (
-    <Card className="border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-950/20 dark:to-amber-950/20">
+    <Card className="border border-primary/25 bg-card">
       <CardContent className={compact ? "p-4" : "p-6"}>
         <div className="flex items-start gap-4">
-          <div ref={ref} className="bg-white p-2 rounded-lg shrink-0">
+          <div ref={ref} className="bg-qr-surface p-2 rounded-lg shrink-0">
             <QRCodeCanvas value={url} size={compact ? 88 : 120} level="M" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 text-sm font-semibold text-orange-700 dark:text-orange-300 mb-1">
+            <div className="flex items-center gap-2 text-sm font-semibold text-primary mb-1">
               <Link2 className="h-4 w-4" /> Link publico de matricula
             </div>
             <div className="text-xs text-muted-foreground mb-2 truncate font-mono">{url}</div>

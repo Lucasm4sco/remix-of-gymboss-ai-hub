@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Check } from "lucide-react";
 
-export const Route = createFileRoute("/app/onboarding")({ component: Onboarding });
+export const Route = createFileRoute("/app/onboarding")({ component: Onboarding, head: () => ({ meta: [{"title": "Primeiro acesso · Academia | Gym Spotter"}, {"name": "description", "content": "Primeiro acesso — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "Primeiro acesso · Academia | Gym Spotter"}, {"property": "og:description", "content": "Primeiro acesso — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 const STEPS = ["Dados","Branding","Equipe","Planos & Aulas","Finalizar"];
 
@@ -68,7 +68,7 @@ function Onboarding() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold">Bem-vindo ao GymBoss AI</h1>
+      <h1 className="text-2xl font-bold">Bem-vindo ao Gym Spotter</h1>
       <p className="text-muted-foreground">Vamos configurar sua academia em poucos passos.</p>
 
       <div className="flex items-center gap-2 my-6">

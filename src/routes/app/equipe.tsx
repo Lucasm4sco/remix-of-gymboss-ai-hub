@@ -14,7 +14,7 @@ import { FormDialog } from "@/components/form-dialog";
 import { Plus, Users, Calendar } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/app/equipe")({ component: Equipe });
+export const Route = createFileRoute("/app/equipe")({ component: Equipe, head: () => ({ meta: [{"title": "Equipe · Academia | Gym Spotter"}, {"name": "description", "content": "Equipe — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "Equipe · Academia | Gym Spotter"}, {"property": "og:description", "content": "Equipe — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 const ROLE_LABELS: Record<string, string> = { owner: "Dono", admin: "Admin", professor: "Professor", recepcao: "Recepção", personal: "Personal" };
 
@@ -35,7 +35,7 @@ function Equipe() {
   return (
     <div>
       <PageHeader title="Equipe" description="Profissionais e colaboradores da academia." actions={
-        <Button onClick={() => setOpen(true)} className="bg-[#D97634] hover:bg-[#D97634]/90"><Plus className="h-4 w-4" />Novo membro</Button>
+        <Button onClick={() => setOpen(true)} className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4" />Novo membro</Button>
       } />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -47,7 +47,7 @@ function Equipe() {
             <Card key={m.id}>
               <CardContent className="p-5">
                 <div className="flex items-center gap-3">
-                  <Avatar className="h-14 w-14"><AvatarFallback className="bg-[#D97634]/10 text-[#D97634] font-semibold text-lg">{m.name?.slice(0,2).toUpperCase()}</AvatarFallback></Avatar>
+                  <Avatar className="h-14 w-14"><AvatarFallback className="bg-primary/10 text-primary font-semibold text-lg">{m.name?.slice(0,2).toUpperCase()}</AvatarFallback></Avatar>
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold truncate">{m.name}</div>
                     <div className="text-xs text-muted-foreground truncate">{m.email}</div>
@@ -76,7 +76,7 @@ function Equipe() {
               <option value="admin">Admin</option><option value="professor">Professor</option><option value="recepcao">Recepção</option><option value="personal">Personal</option>
             </select>
           </div>
-          <Button type="submit" className="w-full bg-[#D97634] hover:bg-[#D97634]/90" disabled={create.isPending}>Salvar</Button>
+          <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={create.isPending}>Salvar</Button>
         </form>
       </FormDialog>
     </div>

@@ -10,3 +10,7 @@
 - [x] Restrict public booking reads to an explicit public projection and validate public submissions.
 - [x] Verify visitor plans/form, invalid submission rejection and authenticated owner Master access.
 - [ ] Review deep-scan result when delivered; the scan started before these fixes and may cite old code.
+# Dashboard visual identity
+- [x] Apply the new brand and scoped forest/emerald/teal glass presentation to both panel areas without changing data or handlers.
+- [x] Verify authenticated Master rendering, navigation, creation form without submission, and mobile presentation; eight existing tests pass.
+- [ ] Verify Academy dashboard with a tenant-member session; the available owner session has only Master access, and permissions must remain unchanged.

@@ -31,22 +31,22 @@ export function SidebarTenant() {
   const navigate = useNavigate();
 
   return (
-    <Sidebar collapsible="icon" className="[&_[data-sidebar=sidebar]]:bg-[#151310] [&_[data-sidebar=sidebar]]:text-white">
-      <SidebarHeader className="bg-[#151310] border-b border-white/5">
+    <Sidebar collapsible="icon" className="">
+      <SidebarHeader className="bg-sidebar border-b border-sidebar-border">
         <div className="flex items-center gap-2 px-2 py-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-[#D97634] shadow-lg shadow-[#D97634]/30">
-            <Dumbbell className="h-5 w-5 text-white" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary/15 border border-primary/30">
+            <Dumbbell className="h-5 w-5 text-primary" />
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="text-sm font-bold text-white">GymBoss AI</span>
-            <span className="truncate text-xs text-white/50">{tenant?.academy?.name ?? "—"}</span>
+            <span className="text-sm font-bold text-sidebar-foreground">Gym Spotter</span>
+            <span className="truncate text-xs text-sidebar-foreground/60">{tenant?.academy?.name ?? "—"}</span>
           </div>
         </div>
       </SidebarHeader>
-      <SidebarContent className="bg-[#151310]">
+      <SidebarContent className="bg-sidebar">
         {groups.map((g) => (
           <SidebarGroup key={g.label}>
-            <SidebarGroupLabel className="text-white/40 text-[10px] uppercase tracking-wider px-3">{g.label}</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-sidebar-foreground/50 text-[10px] uppercase tracking-wider px-3">{g.label}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {g.items.map((item) => {
@@ -56,12 +56,12 @@ export function SidebarTenant() {
                       <SidebarMenuButton
                         asChild
                         isActive={active}
-                        className={`text-white/70 hover:text-white hover:bg-white/5 data-[active=true]:bg-[#D97634]/15 data-[active=true]:text-[#E8935D] data-[active=true]:border-l-2 data-[active=true]:border-[#D97634] rounded-md`}
+                        className={`text-sidebar-foreground/80 hover:text-sidebar-accent-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground data-[active=true]:border-l-2 data-[active=true]:border-primary rounded-md`}
                       >
                         <Link to={item.url} className="flex items-center gap-2">
-                          <item.icon className={`h-4 w-4 ${item.accent ? "text-[#D97634]" : ""}`} />
+                          <item.icon className={`h-4 w-4 ${item.accent ? "text-primary" : ""}`} />
                           <span>{item.title}</span>
-                          {item.accent && <span className="ml-auto text-[9px] font-bold bg-[#D97634] text-white px-1.5 py-0.5 rounded">IA</span>}
+                          {item.accent && <span className="ml-auto text-[9px] font-bold bg-primary text-primary-foreground px-1.5 py-0.5 rounded">IA</span>}
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -72,11 +72,11 @@ export function SidebarTenant() {
           </SidebarGroup>
         ))}
       </SidebarContent>
-      <SidebarFooter className="bg-[#151310] border-t border-white/5">
-        <div className="px-2 py-1 text-xs text-white/50 truncate group-data-[collapsible=icon]:hidden">{user?.email}</div>
+      <SidebarFooter className="bg-sidebar border-t border-sidebar-border">
+        <div className="px-2 py-1 text-xs text-sidebar-foreground/60 truncate group-data-[collapsible=icon]:hidden">{user?.email}</div>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton className="text-white/70 hover:text-white hover:bg-white/5" onClick={async () => { await signOut(); navigate({ to: "/entrar", replace: true }); }}>
+            <SidebarMenuButton className="text-sidebar-foreground/80 hover:text-sidebar-accent-foreground hover:bg-sidebar-accent" onClick={async () => { await signOut(); navigate({ to: "/entrar", replace: true }); }}>
               <LogOut className="h-4 w-4" /><span>Sair</span>
             </SidebarMenuButton>
           </SidebarMenuItem>

@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import { fmtBRL, fmtDate } from "@/lib/format";
 import { format, startOfMonth } from "date-fns";
 
-export const Route = createFileRoute("/app/financeiro")({ component: Financeiro });
+export const Route = createFileRoute("/app/financeiro")({ component: Financeiro, head: () => ({ meta: [{"title": "Financeiro · Academia | Gym Spotter"}, {"name": "description", "content": "Financeiro — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "Financeiro · Academia | Gym Spotter"}, {"property": "og:description", "content": "Financeiro — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 function Financeiro() {
   const { tenant } = useTenant(); const aid = tenant?.academyId; const qc = useQueryClient();
@@ -53,19 +53,19 @@ function Financeiro() {
   return (
     <div>
       <PageHeader title="Financeiro" description="Controle de receitas, despesas e inadimplência do mês." actions={
-        <Button onClick={() => setOpen(true)} className="bg-[#D97634] hover:bg-[#D97634]/90"><Plus className="h-4 w-4" />Novo lançamento</Button>
+        <Button onClick={() => setOpen(true)} className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4" />Novo lançamento</Button>
       } />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
         <KpiCard label="Receita prevista" value={fmtBRL(kpis.prevista)} icon={Wallet} />
         <KpiCard label="Receita recebida" value={fmtBRL(kpis.recebida)} icon={TrendingUp} hint="Confirmadas" />
-        <Card className={kpis.inad ? "border-red-500/30" : ""}><CardContent className="p-5">
-          <div className="flex items-center justify-between"><span className="text-sm text-muted-foreground font-medium">Inadimplência</span><AlertTriangle className={`h-4 w-4 ${kpis.inad ? "text-red-600" : "text-muted-foreground"}`} /></div>
-          <div className={`mt-2 text-3xl font-bold ${kpis.inad ? "text-red-600" : ""}`}>{fmtBRL(kpis.inad)}</div>
+        <Card className={kpis.inad ? "border-destructive/30" : ""}><CardContent className="p-5">
+          <div className="flex items-center justify-between"><span className="text-sm text-muted-foreground font-medium">Inadimplência</span><AlertTriangle className={`h-4 w-4 ${kpis.inad ? "text-destructive" : "text-muted-foreground"}`} /></div>
+          <div className={`mt-2 text-3xl font-bold ${kpis.inad ? "text-destructive" : ""}`}>{fmtBRL(kpis.inad)}</div>
         </CardContent></Card>
-        <Card className={kpis.lucro >= 0 ? "border-emerald-500/30" : "border-red-500/30"}><CardContent className="p-5">
-          <div className="flex items-center justify-between"><span className="text-sm text-muted-foreground font-medium">Lucro do mês</span>{kpis.lucro >= 0 ? <TrendingUp className="h-4 w-4 text-emerald-600" /> : <TrendingDown className="h-4 w-4 text-red-600" />}</div>
-          <div className={`mt-2 text-3xl font-bold ${kpis.lucro >= 0 ? "text-emerald-600" : "text-red-600"}`}>{fmtBRL(kpis.lucro)}</div>
+        <Card className={kpis.lucro >= 0 ? "border-success/30" : "border-destructive/30"}><CardContent className="p-5">
+          <div className="flex items-center justify-between"><span className="text-sm text-muted-foreground font-medium">Lucro do mês</span>{kpis.lucro >= 0 ? <TrendingUp className="h-4 w-4 text-success" /> : <TrendingDown className="h-4 w-4 text-destructive" />}</div>
+          <div className={`mt-2 text-3xl font-bold ${kpis.lucro >= 0 ? "text-success" : "text-destructive"}`}>{fmtBRL(kpis.lucro)}</div>
         </CardContent></Card>
       </div>
 
@@ -89,7 +89,7 @@ function Financeiro() {
           <div><Label>Descrição</Label><Input value={form.description} onChange={(e)=>setForm({...form, description: e.target.value})} /></div>
           <div><Label>Valor</Label><Input type="number" step="0.01" value={form.amount} onChange={(e)=>setForm({...form, amount: Number(e.target.value)})} required /></div>
           <div><Label>Data</Label><Input type="date" value={form.date} onChange={(e)=>setForm({...form, date: e.target.value})} required /></div>
-          <Button type="submit" className="w-full bg-[#D97634] hover:bg-[#D97634]/90" disabled={create.isPending}>Salvar</Button>
+          <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={create.isPending}>Salvar</Button>
         </form>
       </FormDialog>
     </div>
@@ -107,8 +107,8 @@ function FinTable({ rows, action }: { rows: any[]; action?: boolean }) {
               <TableCell>{fmtDate(r.date)}</TableCell>
               <TableCell>{r.category}</TableCell>
               <TableCell>{r.description}</TableCell>
-              <TableCell className={`text-right font-medium ${r.type === "receita" ? "text-emerald-600" : "text-red-600"}`}>{fmtBRL(r.amount)}</TableCell>
-              <TableCell><Badge variant={r.status === "pago" ? "default" : "secondary"} className={r.status === "pago" ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100" : "bg-amber-100 text-amber-700 hover:bg-amber-100"}>{r.status}</Badge></TableCell>
+              <TableCell className={`text-right font-medium ${r.type === "receita" ? "text-success" : "text-destructive"}`}>{fmtBRL(r.amount)}</TableCell>
+              <TableCell><Badge variant={r.status === "pago" ? "default" : "secondary"} className={r.status === "pago" ? "bg-success/15 text-success hover:bg-success/20" : "bg-warning/15 text-warning hover:bg-warning/20"}>{r.status}</Badge></TableCell>
               {action && <TableCell><Button size="sm" variant="outline">Cobrar</Button></TableCell>}
             </TableRow>
           ))}

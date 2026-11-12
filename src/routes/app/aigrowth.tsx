@@ -9,13 +9,13 @@ import { Sparkles, Users, Wallet, Calendar, TrendingUp, MessageCircle, Send } fr
 import { demoAIOpportunities, demoAcademy } from "@/lib/demo-data";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/app/aigrowth")({ component: AIGrowth });
+export const Route = createFileRoute("/app/aigrowth")({ component: AIGrowth, head: () => ({ meta: [{"title": "AI Growth · Academia | Gym Spotter"}, {"name": "description", "content": "AI Growth — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "AI Growth · Academia | Gym Spotter"}, {"property": "og:description", "content": "AI Growth — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 const ICONS: Record<string, any> = { users: Users, wallet: Wallet, calendar: Calendar, sparkles: TrendingUp };
 const SEV: Record<string, string> = {
-  high: "bg-red-100 text-red-700 hover:bg-red-100",
-  medium: "bg-amber-100 text-amber-700 hover:bg-amber-100",
-  low: "bg-blue-100 text-blue-700 hover:bg-blue-100",
+  high: "bg-destructive/15 text-destructive hover:bg-destructive/20",
+  medium: "bg-warning/15 text-warning hover:bg-warning/20",
+  low: "bg-info/15 text-info hover:bg-info/20",
 };
 const SEV_LABEL: Record<string, string> = { high: "Alta", medium: "Média", low: "Baixa" };
 
@@ -47,7 +47,7 @@ function AIGrowth() {
       />
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 mb-6">
-        <Card className="bg-gradient-to-br from-[#D97634] to-[#B85A1F] text-white border-0">
+        <Card className="bg-primary/15 text-foreground border-primary/30">
           <CardContent className="p-5">
             <div className="text-xs opacity-80">Oportunidades ativas</div>
             <div className="text-4xl font-bold mt-1">{demoAIOpportunities.length}</div>
@@ -57,14 +57,14 @@ function AIGrowth() {
         <Card>
           <CardContent className="p-5">
             <div className="text-xs text-muted-foreground">Receita em risco</div>
-            <div className="text-4xl font-bold mt-1 text-red-600">R$ 2.217</div>
+            <div className="text-4xl font-bold mt-1 text-destructive">R$ 2.217</div>
             <div className="text-xs text-muted-foreground mt-2">Inadimplência + inatividade</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-5">
             <div className="text-xs text-muted-foreground">Potencial de reativação</div>
-            <div className="text-4xl font-bold mt-1 text-emerald-600">R$ 1.372</div>
+            <div className="text-4xl font-bold mt-1 text-success">R$ 1.372</div>
             <div className="text-xs text-muted-foreground mt-2">Se agir nas próximas 48h</div>
           </CardContent>
         </Card>
@@ -74,11 +74,11 @@ function AIGrowth() {
         {demoAIOpportunities.map((o: any) => {
           const Icon = ICONS[o.icon] ?? Sparkles;
           return (
-            <Card key={o.id} className="border-[#D97634]/20 hover:border-[#D97634]/50 transition">
+            <Card key={o.id} className="border-primary/20 hover:border-primary/50 transition">
               <CardContent className="p-6">
                 <div className="flex gap-4">
-                  <div className="h-12 w-12 shrink-0 rounded-lg bg-[#D97634]/10 flex items-center justify-center">
-                    <Icon className="h-6 w-6 text-[#D97634]" />
+                  <div className="h-12 w-12 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Icon className="h-6 w-6 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2">
@@ -86,7 +86,7 @@ function AIGrowth() {
                       <Badge className={`${SEV[o.severity]} shrink-0`}>{SEV_LABEL[o.severity]}</Badge>
                     </div>
                     <p className="text-sm text-muted-foreground mt-2">{o.description}</p>
-                    <div className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-[#D97634]">
+                    <div className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
                       <Sparkles className="h-3.5 w-3.5" /> {o.impact}
                     </div>
 
@@ -107,7 +107,7 @@ function AIGrowth() {
                             <Button
                               size="sm"
                               variant="outline"
-                              className="shrink-0 border-[#D97634]/40 text-[#D97634] hover:bg-[#D97634]/10"
+                              className="shrink-0 border-primary/40 text-primary hover:bg-primary/10"
                               onClick={() => setOpen({ op: o, target: t })}
                             >
                               <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
@@ -136,7 +136,7 @@ function AIGrowth() {
             />
             <div className="flex gap-2 justify-end">
               <Button variant="outline" onClick={() => setOpen(null)}>Cancelar</Button>
-              <Button onClick={dispatch} className="bg-[#D97634] hover:bg-[#D97634]/90">
+              <Button onClick={dispatch} className="bg-primary hover:bg-primary/90">
                 <Send className="h-4 w-4" /> Disparar
               </Button>
             </div>

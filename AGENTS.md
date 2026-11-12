@@ -3,3 +3,5 @@
 - Bootstrap the initial owner only from an explicitly selected, provider-verified identity; ordinary signup must never claim global administration.
 - Resolve login destinations after session and tenant permissions load, using public OAuth return pages to avoid transient-session redirects.
 - Public booking reads use a slug-scoped, fixed-field database function and a strict response contract; base-table public SELECT is forbidden to prevent bypassing field privacy through direct API queries.
+# Dashboard presentation
+- Scope dashboard theme tokens through the panel layout marker, including portaled dialogs via the document selector; this preserves public-page styles and all access logic.
