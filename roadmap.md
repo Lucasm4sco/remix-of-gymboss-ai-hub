@@ -11,9 +11,6 @@
 - [x] Verify visitor plans/form, invalid submission rejection and authenticated owner Master access.
 - [ ] Review deep-scan result when delivered; the scan started before these fixes and may cite old code.
 
-# Public booking
-- [x] Show modality options with name fallback and a clear empty-schedule message.
-
 # Modern Dark identity
 - [x] Apply the requested brand copy and shared neutral dark/orange presentation without changing handlers or data.
 - [x] Verify eight tests, automatic compilation, authenticated Master navigation and desktop/mobile layouts without overflow; lint reports 2504 errors and 8 warnings, left unchanged outside visual scope.
