@@ -35,8 +35,8 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: ErrorComponentProps) {
-  console.error(error);
+function ErrorComponent({ reset }: ErrorComponentProps) {
+  console.error("[ROUTE_RENDER_ERROR]");
   const router = useRouter();
 
   return (
