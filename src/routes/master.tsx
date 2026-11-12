@@ -30,7 +30,7 @@ function MasterLayout() {
         <div className="min-w-0 flex-1 flex flex-col">
           <header className="h-14 flex items-center gap-3 border-b border-border bg-sidebar/70">
             <SidebarTrigger className="ml-2" />
-            <span className="text-xs font-medium text-primary">MASTER · Super admin</span>
+            <span className="text-xs font-medium text-primary">Gym Spotter · MASTER · Super admin</span>
           </header>
           <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-background"><Outlet /></main>
         </div>
