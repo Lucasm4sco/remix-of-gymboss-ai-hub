@@ -112,12 +112,14 @@ type ScheduleItem = { id: string; name: string; modality: string | null; day_of_
 function ExperimentalForm({ schedule, brand, onDone }: { schedule: ScheduleItem[]; brand: string; onDone: (label: string) => void }) {
   // academy_id is needed for insert
   const academy_id = (Route.useLoaderData() as any).academy.id as string;
-  const modalities = Array.from(new Set(schedule.map(s => s.modality).filter(Boolean))) as string[];
+  // Stable option per slot: modality when present, otherwise the class name.
+  const optionOf = (s: ScheduleItem) => (s.modality ?? "").trim() || s.name.trim();
+  const modalities = Array.from(new Set(schedule.map(optionOf).filter(Boolean)));
   const [modality, setModality] = useState<string>("");
   const [slotId, setSlotId] = useState<string>("");
   const [form, setForm] = useState({ name: "", phone: "", email: "", age: "", goal: "" });
   const [loading, setLoading] = useState(false);
-  const filtered = schedule.filter(s => s.modality === modality);
+  const filtered = schedule.filter(s => optionOf(s) === modality);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -145,9 +147,14 @@ function ExperimentalForm({ schedule, brand, onDone }: { schedule: ScheduleItem[
 
         <div>
           <Label className="mb-2 block">1. Modalidade</Label>
-          <div className="flex flex-wrap gap-2">
+          {modalities.length === 0 && (
+            <p role="status" className="text-sm text-muted-foreground rounded-lg border p-4">
+              No momento não há modalidades nem horários disponíveis para aula experimental. A academia precisa cadastrá-los; tente novamente mais tarde ou fale com a recepção.
+            </p>
+          )}
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Modalidade">
             {modalities.map(m => (
-              <button key={m} type="button" onClick={() => { setModality(m); setSlotId(""); }}
+              <button key={m} type="button" aria-pressed={modality === m} onClick={() => { setModality(m); setSlotId(""); }}
                 className="px-4 py-2 rounded-full border text-sm transition"
                 style={modality === m ? { background: brand, color: "white", borderColor: brand } : {}}>
                 {m}
@@ -161,7 +168,7 @@ function ExperimentalForm({ schedule, brand, onDone }: { schedule: ScheduleItem[
             <Label className="mb-2 block">2. Dia e horário</Label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
               {filtered.map(s => (
-                <button key={s.id} type="button" onClick={() => setSlotId(s.id)}
+                <button key={s.id} type="button" aria-pressed={slotId === s.id} onClick={() => setSlotId(s.id)}
                   className="text-left p-3 rounded-lg border text-sm transition"
                   style={slotId === s.id ? { background: brand, color: "white", borderColor: brand } : {}}>
                   <div className="font-semibold">{DAYS[s.day_of_week]} · {s.start_time.slice(0,5)}</div>
