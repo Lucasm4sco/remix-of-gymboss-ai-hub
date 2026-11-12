@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { toast } from "sonner";
 import { Building2, MapPin, Phone, User, CreditCard, KeyRound, Copy, MessageCircle, AlertTriangle, ExternalLink } from "lucide-react";
 
-export const Route = createFileRoute("/master/novaAcademia")({ component: Nova });
+export const Route = createFileRoute("/master/novaAcademia")({ component: Nova, head: () => ({ meta: [{"title": "Nova academia · Master | Gym Spotter"}, {"name": "description", "content": "Nova academia — Gym Spotter, gestão de academias."}, {"property": "og:title", "content": "Nova academia · Master | Gym Spotter"}, {"property": "og:description", "content": "Nova academia — Gym Spotter, gestão de academias."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
 type Credentials = {
   academy_id: string;
@@ -132,7 +132,7 @@ function Nova() {
         </Section>
 
         <div className="flex gap-3">
-          <Button type="submit" disabled={busy} size="lg" className="bg-orange-500 hover:bg-orange-600">
+          <Button type="submit" disabled={busy} size="lg" className="bg-primary hover:bg-primary">
             {busy ? "Criando…" : "Criar academia + admin"}
           </Button>
           <Button type="button" variant="outline" onClick={()=>navigate({ to: "/master/listaAcademias" })}>Cancelar</Button>
@@ -179,7 +179,7 @@ export function CredentialsModal({ creds, nome_admin, nome_academia, whatsapp, o
   const all = `Academia: ${nome_academia}\nEmail: ${creds.email_admin}\nSenha: ${creds.senha_gerada}\nLink publico: ${fullLink}`;
   const wa = whatsapp.replace(/\D/g, "");
   const waMsg = encodeURIComponent(
-    `Ola ${nome_admin}! Sua academia ${nome_academia} foi criada no GymBoss AI.\n\n` +
+    `Ola ${nome_admin}! Sua academia ${nome_academia} foi criada no Gym Spotter.\n\n` +
     `Acesso:\nEmail: ${creds.email_admin}\nSenha: ${creds.senha_gerada}\n\nLink publico de matricula:\n${fullLink}\n\nAcesse e troque sua senha no primeiro login.`
   );
 
@@ -187,11 +187,11 @@ export function CredentialsModal({ creds, nome_admin, nome_academia, whatsapp, o
     <Dialog open={true} onOpenChange={() => onClose()}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2"><KeyRound className="h-5 w-5 text-orange-500" />Credenciais geradas</DialogTitle>
+          <DialogTitle className="flex items-center gap-2"><KeyRound className="h-5 w-5 text-primary" />Credenciais geradas</DialogTitle>
           <DialogDescription>Academia criada com sucesso. Compartilhe os dados de acesso com o admin.</DialogDescription>
         </DialogHeader>
 
-        <div className="rounded-md border border-red-300 bg-red-50 dark:bg-red-950/30 p-3 flex gap-2 text-sm text-red-700 dark:text-red-300">
+        <div className="rounded-md border border-destructive/30 bg-destructive/15 dark:bg-destructive/30 p-3 flex gap-2 text-sm text-destructive dark:text-destructive">
           <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" /> Esta senha so aparece uma vez. Salve agora.
         </div>
 
@@ -208,7 +208,7 @@ export function CredentialsModal({ creds, nome_admin, nome_academia, whatsapp, o
             <Copy className="h-4 w-4 mr-2" />Copiar tudo
           </Button>
           {wa && (
-            <Button asChild className="bg-emerald-500 hover:bg-emerald-600">
+            <Button asChild className="bg-success hover:bg-success">
               <a href={`https://wa.me/55${wa}?text=${waMsg}`} target="_blank" rel="noreferrer">
                 <MessageCircle className="h-4 w-4 mr-2" />Enviar por WhatsApp
               </a>

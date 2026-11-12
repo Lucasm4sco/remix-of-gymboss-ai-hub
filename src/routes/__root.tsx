@@ -42,7 +42,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
+        <h1 className="text-xl font-semibold tracking-normal text-foreground">
           This page didn't load
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
@@ -75,18 +75,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "GymBoss AI — Gestão de academias" },
+      { title: "Gym Spotter — Gestão de academias" },
       { name: "description", content: "Sua academia sob controle: alunos, planos, agenda, check-in e financeiro." },
-      { name: "author", content: "GymBoss AI" },
-      { property: "og:title", content: "GymBoss AI — Gestão de academias" },
+      { name: "author", content: "Gym Spotter" },
+      { property: "og:title", content: "Gym Spotter — Gestão de academias" },
       { property: "og:description", content: "Sua academia sob controle: alunos, planos, agenda, check-in e financeiro." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "GymBoss AI — Gestão de academias" },
+      { name: "twitter:title", content: "Gym Spotter — Gestão de academias" },
       { name: "twitter:description", content: "Sua academia sob controle: alunos, planos, agenda, check-in e financeiro." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b6771674-2f45-441b-ac54-7c0370b341d6/id-preview-aad7c658--fa7f9ada-f88b-43c0-a1f4-57df6c4c47c0.lovable.app-1779628255448.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b6771674-2f45-441b-ac54-7c0370b341d6/id-preview-aad7c658--fa7f9ada-f88b-43c0-a1f4-57df6c4c47c0.lovable.app-1779628255448.png" },
     ],
     links: [
       {

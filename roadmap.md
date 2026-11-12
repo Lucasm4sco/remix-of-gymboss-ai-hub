@@ -10,3 +10,8 @@
 - [x] Restrict public booking reads to an explicit public projection and validate public submissions.
 - [x] Verify visitor plans/form, invalid submission rejection and authenticated owner Master access.
 - [ ] Review deep-scan result when delivered; the scan started before these fixes and may cite old code.
+
+# Modern Dark identity
+- [x] Apply the requested brand copy and shared neutral dark/orange presentation without changing handlers or data.
+- [x] Verify eight tests, automatic compilation, authenticated Master navigation and desktop/mobile layouts without overflow; lint reports 2504 errors and 8 warnings, left unchanged outside visual scope.
+- [ ] Verify Gabriel's client dashboard: blocked by lack of an authorized session for that account; shared Academy layout verified through onboarding only.
