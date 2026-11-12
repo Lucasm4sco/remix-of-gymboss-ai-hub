@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { format } from "date-fns";
 
-export const Route = createFileRoute("/app/leads")({ component: Leads, head: () => ({ meta: [{"title": "Leads · Academia | Gym Spotter"}, {"name": "description", "content": "Leads — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "Leads · Academia | Gym Spotter"}, {"property": "og:description", "content": "Leads — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
+export const Route = createFileRoute("/app/leads")({ component: Leads });
 
 const TYPE_LABEL: Record<string, string> = {
   aula_experimental: "Aula experimental",

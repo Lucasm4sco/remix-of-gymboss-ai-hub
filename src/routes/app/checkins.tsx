@@ -10,7 +10,7 @@ import { ScanLine } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/app/checkins")({ component: Checkins, head: () => ({ meta: [{"title": "Check-ins · Academia | Gym Spotter"}, {"name": "description", "content": "Check-ins — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "Check-ins · Academia | Gym Spotter"}, {"property": "og:description", "content": "Check-ins — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
+export const Route = createFileRoute("/app/checkins")({ component: Checkins });
 
 function Checkins() {
   const { tenant } = useTenant();

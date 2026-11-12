@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { demoMasterAcademies } from "@/lib/demo-data";
 import { fmtBRL } from "@/lib/format";
 
-export const Route = createFileRoute("/master/painel")({ component: Painel, head: () => ({ meta: [{"title": "Painel Master · Master | Gym Spotter"}, {"name": "description", "content": "Painel Master — gestão Master no Gym Spotter."}, {"property": "og:title", "content": "Painel Master · Master | Gym Spotter"}, {"property": "og:description", "content": "Painel Master — gestão Master no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
+export const Route = createFileRoute("/master/painel")({ component: Painel });
 
 function Painel() {
   const { data } = useQuery({
@@ -64,9 +64,9 @@ function Painel() {
                 <TableCell>
                   <Badge
                     className={
-                      a.status === "ativa" ? "bg-success/15 text-success hover:bg-success/20"
-                      : a.status === "trial" ? "bg-warning/15 text-warning hover:bg-warning/20"
-                      : "bg-destructive/15 text-destructive hover:bg-destructive/20"
+                      a.status === "ativa" ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+                      : a.status === "trial" ? "bg-amber-100 text-amber-700 hover:bg-amber-100"
+                      : "bg-red-100 text-red-700 hover:bg-red-100"
                     }
                   >{a.status}</Badge>
                 </TableCell>

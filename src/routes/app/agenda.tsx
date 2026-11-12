@@ -15,7 +15,7 @@ import { Plus } from "lucide-react";
 import { DragDropContext, Droppable, Draggable, type DropResult } from "@hello-pangea/dnd";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/app/agenda")({ component: Agenda, head: () => ({ meta: [{"title": "Agenda · Academia | Gym Spotter"}, {"name": "description", "content": "Agenda — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "Agenda · Academia | Gym Spotter"}, {"property": "og:description", "content": "Agenda — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
+export const Route = createFileRoute("/app/agenda")({ component: Agenda });
 
 const DAYS = [
   { i: 1, label: "Segunda" }, { i: 2, label: "Terça" }, { i: 3, label: "Quarta" },
@@ -24,14 +24,14 @@ const DAYS = [
 const HOURS = Array.from({ length: 17 }, (_, i) => 6 + i); // 6h-22h
 
 const MODALITY_COLORS: Record<string, string> = {
-  "Musculacao": "bg-primary/20 border-l-4 border-primary text-primary",
-  "Funcional":  "bg-emerald-100 border-l-4 border-success text-emerald-900",
-  "Pilates":    "bg-chart-5/15 border-l-4 border-chart-5 text-chart-5",
-  "Yoga":       "bg-info/15 border-l-4 border-info text-info",
-  "Crossfit":   "bg-destructive/15 border-l-4 border-destructive text-destructive",
-  "Spinning":   "bg-warning/15 border-l-4 border-warning text-warning",
-  "Body Pump":  "bg-chart-3/15 border-l-4 border-chart-3 text-chart-3",
-  "Zumba":      "bg-chart-5/15 border-l-4 border-chart-5 text-chart-5",
+  "Musculacao": "bg-[#D97634]/20 border-l-4 border-[#D97634] text-[#7a3e15]",
+  "Funcional":  "bg-emerald-100 border-l-4 border-emerald-500 text-emerald-900",
+  "Pilates":    "bg-purple-100 border-l-4 border-purple-500 text-purple-900",
+  "Yoga":       "bg-sky-100 border-l-4 border-sky-500 text-sky-900",
+  "Crossfit":   "bg-rose-100 border-l-4 border-rose-500 text-rose-900",
+  "Spinning":   "bg-amber-100 border-l-4 border-amber-500 text-amber-900",
+  "Body Pump":  "bg-indigo-100 border-l-4 border-indigo-500 text-indigo-900",
+  "Zumba":      "bg-pink-100 border-l-4 border-pink-500 text-pink-900",
 };
 
 const MODALITIES = ["Musculacao", "Funcional", "Pilates", "Yoga", "Crossfit", "Aerobica", "Outro"] as const;
@@ -158,7 +158,7 @@ function Agenda() {
   return (
     <div>
       <PageHeader title="Agenda" description="Arraste aulas entre horários e dias. Clique para detalhes." actions={
-        <Button onClick={openCreate} className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4" />Nova aula</Button>
+        <Button onClick={openCreate} className="bg-[#D97634] hover:bg-[#D97634]/90"><Plus className="h-4 w-4" />Nova aula</Button>
       } />
 
       <DragDropContext onDragEnd={onDragEnd}>
@@ -263,7 +263,7 @@ function Agenda() {
             </Select>
           </div>
           <div><Label>Capacidade *</Label><Input type="number" min={1} value={form.max_capacity} onChange={(e) => setForm({ ...form, max_capacity: Number(e.target.value) })} required /></div>
-          <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={save.isPending}>Salvar</Button>
+          <Button type="submit" className="w-full bg-[#D97634] hover:bg-[#D97634]/90" disabled={save.isPending}>Salvar</Button>
         </form>
       </FormDialog>
     </div>
