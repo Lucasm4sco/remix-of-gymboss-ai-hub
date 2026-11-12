@@ -15,6 +15,13 @@
       "when": 1794418274577,
       "tag": "0001_restrict_public_booking_data",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794453446529,
+      "tag": "0002_restrict_has_role_to_authorized_callers",
+      "breakpoints": true
     }
   ]
 }
