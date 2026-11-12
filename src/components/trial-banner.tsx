@@ -19,14 +19,14 @@ export function TrialBanner() {
     const days = differenceInDays(parseISO(a.trial_ate), new Date());
     if (days <= 3 && days >= 0) {
       return (
-        <div className="bg-warning/15 text-warning px-4 py-2 text-sm text-center">
+        <div className="bg-yellow-400 text-yellow-950 px-4 py-2 text-sm text-center">
           Seu trial termina em {days} {days === 1 ? "dia" : "dias"}. <Link to="/app/configuracoes" className="underline font-medium">Assinar plano</Link>
         </div>
       );
     }
     if (days < 0) {
       return (
-        <div className="bg-warning/15 text-warning px-4 py-2 text-sm text-center">
+        <div className="bg-orange-500 text-white px-4 py-2 text-sm text-center">
           Trial expirado. <Link to="/app/configuracoes" className="underline font-medium">Assinar para continuar</Link>
         </div>
       );

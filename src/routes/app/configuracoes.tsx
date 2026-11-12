@@ -13,7 +13,7 @@ import { fmtBRL, fmtDate } from "@/lib/format";
 import { useQuery } from "@tanstack/react-query";
 import { BookingLinkCard } from "@/components/booking-link-card";
 
-export const Route = createFileRoute("/app/configuracoes")({ component: Config, head: () => ({ meta: [{"title": "Configurações · Academia | Gym Spotter"}, {"name": "description", "content": "Configurações — gestão Academia no Gym Spotter."}, {"property": "og:title", "content": "Configurações · Academia | Gym Spotter"}, {"property": "og:description", "content": "Configurações — gestão Academia no Gym Spotter."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
+export const Route = createFileRoute("/app/configuracoes")({ component: Config });
 
 function Config() {
   const { tenant, refetch } = useTenant();
