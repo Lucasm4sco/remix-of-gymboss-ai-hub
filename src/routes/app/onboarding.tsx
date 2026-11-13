@@ -60,8 +60,11 @@ function Onboarding() {
           const { data: ac, error } = await supabase.rpc("create_academy_with_owner", {
             p_name: data.name, p_telefone: data.telefone, p_email: data.email, p_cor_primaria: data.cor_primaria,
           }).single();
-          if (error || !ac) throw new Error("Não foi possível confirmar a criação da academia. Verifique sua conexão e a confirmação do email antes de tentar novamente.");
-          return ac.id;
+          const created: unknown = ac;
+          if (error || !created || typeof created !== "object" || !("id" in created) || typeof created.id !== "string") {
+            throw new Error("Não foi possível confirmar a criação da academia. Verifique sua conexão e a confirmação do email antes de tentar novamente.");
+          }
+          return created.id;
         },
         savePlans: async (academyId) => {
           if (!data.planos.length) return;
