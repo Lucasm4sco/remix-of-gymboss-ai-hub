@@ -6,13 +6,18 @@ import { PageHeader } from "@/components/page-header";
 import { KpiCard } from "@/components/kpi-card";
 import { Users, ScanLine, Wallet, AlertTriangle, TrendingUp, UserPlus, CalendarCheck, Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, LineChart, Line, CartesianGrid, Legend } from "recharts";
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 import { fmtBRL } from "@/lib/format";
 import { format, subDays, startOfMonth } from "date-fns";
-import { demoAulasHoje, demoAIOpportunities, demoAlunosEvolution12m } from "@/lib/demo-data";
 import { BookingLinkCard } from "@/components/booking-link-card";
 
-export const Route = createFileRoute("/app/dashboard")({ component: Dashboard });
+export const Route = createFileRoute("/app/dashboard")({ component: Dashboard, head: () => ({ meta: [
+  { title: "Dashboard · Academia | Gym Spotter" },
+  { name: "description", content: "Indicadores e registros da sua academia no Gym Spotter." },
+  { property: "og:title", content: "Dashboard · Academia | Gym Spotter" },
+  { property: "og:description", content: "Indicadores e registros da sua academia no Gym Spotter." },
+  { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
+] }) });
 
 function Dashboard() {
   const { tenant } = useTenant();
@@ -21,21 +26,24 @@ function Dashboard() {
   const weekAgo = format(subDays(new Date(), 7), "yyyy-MM-dd");
   const monthStart = format(startOfMonth(new Date()), "yyyy-MM-dd");
 
-  const { data } = useQuery({
+  const { data: loadedData, error } = useQuery({
     queryKey: ["dashboard", aid],
     enabled: !!aid,
     queryFn: async () => {
-      const [students, todays, weeks, financial, last14, byHour, plans, newStudents, overdue] = await Promise.all([
-        supabase.from("student").select("id", { count: "exact", head: true }).eq("academy_id", aid!).eq("status", "active"),
-        supabase.from("checkin").select("id", { count: "exact", head: true }).eq("academy_id", aid!).eq("date", today),
-        supabase.from("checkin").select("id", { count: "exact", head: true }).eq("academy_id", aid!).gte("date", weekAgo),
-        supabase.from("financial").select("amount,type,status").eq("academy_id", aid!).gte("date", monthStart),
-        supabase.from("checkin").select("date").eq("academy_id", aid!).gte("date", format(subDays(new Date(), 13), "yyyy-MM-dd")),
-        supabase.from("checkin").select("time").eq("academy_id", aid!).eq("date", today),
-        supabase.from("student").select("plan_name").eq("academy_id", aid!),
-        supabase.from("student").select("id", { count: "exact", head: true }).eq("academy_id", aid!).gte("created_at", monthStart),
-        supabase.from("student").select("id", { count: "exact", head: true }).eq("academy_id", aid!).eq("payment_status", "atrasado"),
+      if (!aid) throw new Error("Academia não selecionada.");
+      const results = await Promise.all([
+        supabase.from("student").select("id", { count: "exact", head: true }).eq("academy_id", aid).eq("status", "active"),
+        supabase.from("checkin").select("id", { count: "exact", head: true }).eq("academy_id", aid).eq("date", today),
+        supabase.from("checkin").select("id", { count: "exact", head: true }).eq("academy_id", aid).gte("date", weekAgo),
+        supabase.from("financial").select("amount,type,status").eq("academy_id", aid).gte("date", monthStart),
+        supabase.from("checkin").select("date").eq("academy_id", aid).gte("date", format(subDays(new Date(), 13), "yyyy-MM-dd")),
+        supabase.from("checkin").select("time").eq("academy_id", aid).eq("date", today),
+        supabase.from("student").select("plan_name").eq("academy_id", aid),
+        supabase.from("student").select("id", { count: "exact", head: true }).eq("academy_id", aid).gte("created_at", monthStart),
+        supabase.from("student").select("id", { count: "exact", head: true }).eq("academy_id", aid).eq("payment_status", "atrasado"),
       ]);
+      if (results.some(result => result.error)) throw new Error("Não foi possível carregar os indicadores.");
+      const [students, todays, weeks, financial, last14, byHour, plans, newStudents, overdue] = results;
       const receita = (financial.data ?? []).filter(f => f.type === "receita" && f.status === "pago").reduce((s, f) => s + Number(f.amount), 0);
       const byDay: Record<string, number> = {};
       for (let i = 13; i >= 0; i--) byDay[format(subDays(new Date(), i), "yyyy-MM-dd")] = 0;
@@ -56,14 +64,13 @@ function Dashboard() {
     },
   });
 
-  const aulasHoje = demoAulasHoje();
-  const ai = demoAIOpportunities.slice(0, 3);
-  const evol = demoAlunosEvolution12m();
+  const data = error ? undefined : loadedData;
   const { data: slugRow } = useQuery({
     queryKey: ["academy-slug", aid],
     enabled: !!aid,
     queryFn: async () => {
-      const { data } = await supabase.from("academy").select("slug").eq("id", aid!).maybeSingle();
+      if (!aid) return null;
+      const { data } = await supabase.from("academy").select("slug").eq("id", aid).maybeSingle();
       return data;
     },
   });
@@ -71,6 +78,7 @@ function Dashboard() {
   return (
     <div>
       <PageHeader title="Dashboard" description={`Bem-vindo${tenant?.academy?.name ? ` à ${tenant.academy.name}` : ""}.`} />
+      {error && <p role="alert" className="mb-4 text-sm text-destructive">Não foi possível carregar os indicadores. Tente novamente mais tarde.</p>}
       {slugRow?.slug && <div className="mb-6"><BookingLinkCard slug={slugRow.slug} /></div>}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -78,7 +86,7 @@ function Dashboard() {
         <KpiCard label="Check-ins na semana"   value={data?.weeks ?? "—"}     icon={CalendarCheck} hint="Últimos 7 dias" />
         <KpiCard label="Alunos ativos"         value={data?.students ?? "—"}  icon={Users} />
         <KpiCard label="Novos cadastros (mês)" value={data?.newStudents ?? "—"} icon={UserPlus} />
-        <KpiCard label="Faturamento (mês)"     value={fmtBRL(data?.receita ?? 0)} icon={Wallet} hint="Recebido este mês" />
+        <KpiCard label="Faturamento (mês)"     value={data ? fmtBRL(data.receita) : "—"} icon={Wallet} hint="Recebido este mês" />
         <Card className={data?.overdue ? "border-destructive/40 bg-destructive/40" : ""}>
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
@@ -89,15 +97,15 @@ function Dashboard() {
             {!!data?.overdue && <div className="text-xs text-destructive mt-1">Cobrar inadimplentes</div>}
           </CardContent>
         </Card>
-        <KpiCard label="Taxa ocupação aulas" value="72%" icon={TrendingUp} hint="Média da semana" />
+        <KpiCard label="Taxa ocupação aulas" value="—" icon={TrendingUp} hint="Indicador indisponível" />
         <Card className="border-primary/30 bg-primary/5">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-primary">AI Alerts</span>
               <Sparkles className="h-4 w-4 text-primary" />
             </div>
-            <div className="mt-2 text-3xl font-bold text-primary">{ai.length}</div>
-            <div className="text-xs text-primary/80 mt-1">Oportunidades detectadas</div>
+            <div className="mt-2 text-3xl font-bold text-primary">—</div>
+            <div className="text-xs text-primary/80 mt-1">Indicador indisponível</div>
           </CardContent>
         </Card>
       </div>
@@ -125,36 +133,14 @@ function Dashboard() {
 
         <Card className="lg:col-span-2"><CardContent className="p-5">
           <h3 className="font-semibold mb-4">Evolução de alunos (12 meses)</h3>
-          <div className="h-64"><ResponsiveContainer>
-            <LineChart data={evol}>
-              <CartesianGrid strokeDasharray="3 3" opacity={0.3} /><XAxis dataKey="month" /><YAxis allowDecimals={false} /><Tooltip /><Legend />
-              <Line type="monotone" dataKey="alunos" stroke="var(--primary)" strokeWidth={3} dot={{ fill: "var(--primary)" }} />
-            </LineChart>
-          </ResponsiveContainer></div>
+          <p className="py-8 text-sm text-muted-foreground">Histórico de evolução indisponível. Nenhum dado demonstrativo é exibido.</p>
         </CardContent></Card>
       </div>
 
       <div className="grid gap-6 mt-6 lg:grid-cols-3">
         <Card className="lg:col-span-2"><CardContent className="p-5">
           <h3 className="font-semibold mb-4">Aulas de hoje</h3>
-          {aulasHoje.length === 0 ? (
-            <div className="text-sm text-muted-foreground py-8 text-center">Nenhuma aula hoje</div>
-          ) : (
-            <div className="space-y-2">
-              {aulasHoje.map(a => (
-                <div key={a.id} className="flex items-center justify-between border border-border rounded-md p-3">
-                  <div>
-                    <div className="font-medium">{a.name}</div>
-                    <div className="text-xs text-muted-foreground">{a.instructor_name} • {a.start_time?.slice(0,5)}–{a.end_time?.slice(0,5)}</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm font-semibold">{a.inscritos}/{a.max_capacity}</div>
-                    <div className="text-xs text-muted-foreground">inscritos</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          <p className="py-8 text-sm text-muted-foreground">Resumo de aulas indisponível. Consulte os horários cadastrados na Agenda.</p>
         </CardContent></Card>
 
         <Card className="border-primary/30"><CardContent className="p-5">
@@ -162,14 +148,7 @@ function Dashboard() {
             <Sparkles className="h-4 w-4 text-primary" />
             <h3 className="font-semibold">Alertas IA</h3>
           </div>
-          <div className="space-y-3">
-            {ai.map(o => (
-              <div key={o.id} className="border-l-2 border-primary pl-3">
-                <div className="text-sm font-medium">{o.title}</div>
-                <div className="text-xs text-muted-foreground mt-0.5">{o.impact}</div>
-              </div>
-            ))}
-          </div>
+          <p className="text-sm text-muted-foreground">Análise de IA indisponível. Nenhuma oportunidade foi calculada com os dados da academia.</p>
         </CardContent></Card>
       </div>
     </div>
