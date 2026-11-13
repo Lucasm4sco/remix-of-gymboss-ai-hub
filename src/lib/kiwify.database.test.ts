@@ -24,6 +24,7 @@ test("atomic Kiwify processing, deduplication, review and tenant isolation", { s
   `;
   const migration = readFileSync(new URL("../../drizzle/migrations/0003_kiwify_atomic_billing.sql", import.meta.url), "utf8");
   const triggerFix = readFileSync(new URL("../../drizzle/migrations/0004_kiwify_billing_trigger_authorization.sql", import.meta.url), "utf8");
+  const privateGrants = readFileSync(new URL("../../drizzle/migrations/0005_kiwify_explicit_private_grants.sql", import.meta.url), "utf8");
   const assertions = `
     INSERT INTO public.academy(id,name,owner_email) VALUES ('00000000-0000-4000-8000-000000000001','A','owner@example.invalid'),('00000000-0000-4000-8000-000000000002','B','b@example.invalid');
     INSERT INTO public.academy_user VALUES ('00000000-0000-4000-8000-000000000001','owner@example.invalid','owner',true),('00000000-0000-4000-8000-000000000001','shared@example.invalid','admin',true),('00000000-0000-4000-8000-000000000002','shared@example.invalid','owner',true);
@@ -56,6 +57,7 @@ test("atomic Kiwify processing, deduplication, review and tenant isolation", { s
       IF (SELECT count(*) FROM public.kiwify_event)<>0 OR (SELECT count(*) FROM public.kiwify_subscription)<>0 THEN RAISE EXCEPTION 'Review queue exposed'; END IF;
       IF (SELECT count(*) FROM public.student)<>1 THEN RAISE EXCEPTION 'Tenant isolation broken'; END IF;
       IF has_function_privilege(current_user,'public.kiwify_process_event(jsonb)','execute') THEN RAISE EXCEPTION 'Privileged RPC exposed'; END IF;
+      IF has_table_privilege(current_user,'public.kiwify_event','insert') OR has_table_privilege(current_user,'public.kiwify_subscription','update') THEN RAISE EXCEPTION 'Billing write privileges exposed'; END IF;
     END $$;
     SELECT set_config('test.uid','00000000-0000-4000-8000-000000000001',false);
     DO $$ BEGIN IF (SELECT count(*) FROM public.student)<>0 THEN RAISE EXCEPTION 'Revoked billing access not blocked'; END IF; END $$;
@@ -69,6 +71,6 @@ test("atomic Kiwify processing, deduplication, review and tenant isolation", { s
       IF EXISTS(SELECT 1 FROM public.kiwify_subscription WHERE id='rollback') THEN RAISE EXCEPTION 'Transaction partially committed'; END IF;
     END $$;
   `;
-  const result = spawnSync("psql", ["-X", "-h", "/tmp/kiwify/socket", "-p", "55439", "-U", "lovable", "-d", "postgres", "-v", "ON_ERROR_STOP=1"], { input: "BEGIN;" + bootstrap + migration + triggerFix + assertions + "ROLLBACK;", encoding: "utf8", env: { PATH: process.env.PATH } });
+  const result = spawnSync("psql", ["-X", "-h", "/tmp/kiwify/socket", "-p", "55439", "-U", "lovable", "-d", "postgres", "-v", "ON_ERROR_STOP=1"], { input: "BEGIN;" + bootstrap + migration + triggerFix + privateGrants + assertions + "ROLLBACK;", encoding: "utf8", env: { PATH: process.env.PATH } });
   assert.equal(result.status, 0, result.stderr);
 });
