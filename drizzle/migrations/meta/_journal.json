@@ -29,6 +29,13 @@
       "when": 1794537474143,
       "tag": "0003_kiwify_atomic_billing",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794537631837,
+      "tag": "0004_kiwify_billing_trigger_authorization",
+      "breakpoints": true
     }
   ]
 }
