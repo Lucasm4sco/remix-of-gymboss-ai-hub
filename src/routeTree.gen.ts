@@ -45,6 +45,7 @@ import { Route as MasterConfiguracoesRouteImport } from './routes/master/configu
 import { Route as MasterListaAcademiasRouteImport } from './routes/master/listaAcademias'
 import { Route as MasterNovaAcademiaRouteImport } from './routes/master/novaAcademia'
 import { Route as MasterPainelRouteImport } from './routes/master/painel'
+import { Route as ApiPublicKiwifyWebhookRouteImport } from './routes/api/public/kiwify/webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -226,6 +227,11 @@ const MasterPainelRoute = MasterPainelRouteImport.update({
   path: '/painel',
   getParentRoute: () => MasterRoute,
 } as any)
+const ApiPublicKiwifyWebhookRoute = ApiPublicKiwifyWebhookRouteImport.update({
+  id: '/api/public/kiwify/webhook',
+  path: '/api/public/kiwify/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -264,6 +270,7 @@ export interface FileRoutesByFullPath {
   '/master/listaAcademias': typeof MasterListaAcademiasRoute
   '/master/novaAcademia': typeof MasterNovaAcademiaRoute
   '/master/painel': typeof MasterPainelRoute
+  '/api/public/kiwify/webhook': typeof ApiPublicKiwifyWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -302,6 +309,7 @@ export interface FileRoutesByTo {
   '/master/listaAcademias': typeof MasterListaAcademiasRoute
   '/master/novaAcademia': typeof MasterNovaAcademiaRoute
   '/master/painel': typeof MasterPainelRoute
+  '/api/public/kiwify/webhook': typeof ApiPublicKiwifyWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -341,6 +349,7 @@ export interface FileRoutesById {
   '/master/listaAcademias': typeof MasterListaAcademiasRoute
   '/master/novaAcademia': typeof MasterNovaAcademiaRoute
   '/master/painel': typeof MasterPainelRoute
+  '/api/public/kiwify/webhook': typeof ApiPublicKiwifyWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -381,6 +390,7 @@ export interface FileRouteTypes {
     | '/master/listaAcademias'
     | '/master/novaAcademia'
     | '/master/painel'
+    | '/api/public/kiwify/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -419,6 +429,7 @@ export interface FileRouteTypes {
     | '/master/listaAcademias'
     | '/master/novaAcademia'
     | '/master/painel'
+    | '/api/public/kiwify/webhook'
   id:
     | '__root__'
     | '/'
@@ -457,6 +468,7 @@ export interface FileRouteTypes {
     | '/master/listaAcademias'
     | '/master/novaAcademia'
     | '/master/painel'
+    | '/api/public/kiwify/webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -469,6 +481,7 @@ export interface RootRouteChildren {
   MasterRoute: typeof MasterRouteWithChildren
   ResetSenhaRoute: typeof ResetSenhaRoute
   AgendarSlugRoute: typeof AgendarSlugRoute
+  ApiPublicKiwifyWebhookRoute: typeof ApiPublicKiwifyWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -725,6 +738,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MasterPainelRouteImport
       parentRoute: typeof MasterRoute
     }
+    '/api/public/kiwify/webhook': {
+      id: '/api/public/kiwify/webhook'
+      path: '/api/public/kiwify/webhook'
+      fullPath: '/api/public/kiwify/webhook'
+      preLoaderRoute: typeof ApiPublicKiwifyWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -817,6 +837,7 @@ const rootRouteChildren: RootRouteChildren = {
   MasterRoute: MasterRouteWithChildren,
   ResetSenhaRoute: ResetSenhaRoute,
   AgendarSlugRoute: AgendarSlugRoute,
+  ApiPublicKiwifyWebhookRoute: ApiPublicKiwifyWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
