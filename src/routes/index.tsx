@@ -25,9 +25,9 @@ const recursos = [
 ];
 
 const planos = [
-  { n: "Start", p: "97", d: "Ideal para estúdios.", f: ["Gestão de até 50 alunos", "Agenda"] },
-  { n: "Pro", p: "197", d: "O mais popular", destaque: true, f: ["Alunos ilimitados", "Financeiro completo", "Suporte prioritário"] },
-  { n: "Elite", p: "397", d: "Para redes de academias.", f: ["Múltiplas unidades", "Relatórios avançados"] },
+  { n: "Start", p: "97", d: "Ideal para estúdios.", f: ["Gestão de até 50 alunos", "Agenda"], checkout: "https://pay.kiwify.com.br/gNqK4eC" },
+  { n: "Pro", p: "197", d: "O mais popular", destaque: true, f: ["Alunos ilimitados", "Financeiro completo", "Suporte prioritário"], checkout: "https://pay.kiwify.com.br/HHpoAGt" },
+  { n: "Elite", p: "397", d: "Para redes de academias.", f: ["Múltiplas unidades", "Relatórios avançados"], checkout: "https://pay.kiwify.com.br/zbICqSC" },
 ];
 
 const passos = [
@@ -121,7 +121,7 @@ function Landing() {
                     <li key={x} className="flex items-start gap-2 text-sm"><Check className="h-4 w-4 mt-0.5 shrink-0 text-primary" />{x}</li>
                   ))}
                 </ul>
-                <Button asChild variant={pl.destaque ? "default" : "outline"} className="mt-6 w-full font-bold"><Link to="/entrar">Assinar Agora</Link></Button>
+                <Button asChild variant={pl.destaque ? "default" : "outline"} className="mt-6 w-full font-bold"><a href={pl.checkout} target="_blank" rel="noopener noreferrer">Assinar Agora</a></Button>
               </div>
             ))}
           </div>
