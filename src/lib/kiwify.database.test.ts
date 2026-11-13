@@ -43,8 +43,10 @@ test("atomic Kiwify processing, deduplication, review and tenant isolation", { s
       IF (SELECT reason FROM public.kiwify_event WHERE order_id='amb')<>'ambiguous_tenant' THEN RAISE EXCEPTION 'Ambiguity not quarantined'; END IF;
       PERFORM public.kiwify_process_event(ev || jsonb_build_object('identity','order:none','order_id','none','subscription_id','none','customer_email','none@example.invalid'));
       IF (SELECT reason FROM public.kiwify_event WHERE order_id='none')<>'no_tenant' THEN RAISE EXCEPTION 'No match not quarantined'; END IF;
+      PERFORM public.kiwify_process_event(ev || jsonb_build_object('identity','order:renew','order_id','renew','event_type','subscription_renewed','access_until','2099-02-01T00:00:00Z'));
+      IF (SELECT access_until FROM public.kiwify_subscription WHERE id='s1')<>'2099-02-01T00:00:00Z'::timestamptz THEN RAISE EXCEPTION 'Renewal did not extend access'; END IF;
       PERFORM public.kiwify_process_event(ev || jsonb_build_object('identity','order:late','order_id','late','event_type','subscription_late','access_until','2000-01-01T00:00:00Z','order_status','refused'));
-      IF (SELECT access_until FROM public.kiwify_subscription WHERE id='s1')<>'2099-01-01T00:00:00Z'::timestamptz THEN RAISE EXCEPTION 'Late shortened paid-through'; END IF;
+      IF (SELECT access_until FROM public.kiwify_subscription WHERE id='s1')<>'2099-02-01T00:00:00Z'::timestamptz THEN RAISE EXCEPTION 'Late shortened paid-through'; END IF;
       PERFORM public.kiwify_process_event(ev || jsonb_build_object('identity','order:cancel','order_id','cancel','event_type','subscription_canceled'));
       IF (SELECT status FROM public.academy WHERE name='A')<>'active' THEN RAISE EXCEPTION 'Cancel removed paid access'; END IF;
       PERFORM public.kiwify_process_event(ev || jsonb_build_object('identity','order:chargeback','order_id','chargeback','event_type','chargeback','order_status','chargedback'));
@@ -66,6 +68,12 @@ test("atomic Kiwify processing, deduplication, review and tenant isolation", { s
     SET ROLE authenticated;
     DO $$ BEGIN IF public.kiwify_access_allowed('00000000-0000-4000-8000-000000000001') THEN RAISE EXCEPTION 'Expired canceled period permitted'; END IF; END $$;
     RESET ROLE;
+    DO $$ DECLARE ev jsonb:=jsonb_build_object('identity','order:refund-paid','event_type','order_approved','order_id','refund-paid','subscription_id','refund-sub','customer_email','b@example.invalid','checkout_code','gNqK4eC','plan','starter','access_until','2099-01-01T00:00:00Z','order_status','paid'); BEGIN
+      PERFORM public.kiwify_process_event(ev);
+      PERFORM public.kiwify_resolve('refund-sub','00000000-0000-4000-8000-000000000002','00000000-0000-4000-8000-000000000099');
+      PERFORM public.kiwify_process_event(ev || jsonb_build_object('identity','order:refund','order_id','refund','event_type','order_refunded','order_status','refunded'));
+      IF (SELECT state FROM public.kiwify_subscription WHERE id='refund-sub')<>'revoked' OR (SELECT status FROM public.academy WHERE name='B')<>'blocked' THEN RAISE EXCEPTION 'Refund did not revoke access'; END IF;
+    END $$;
     DO $$ BEGIN
       BEGIN PERFORM public.kiwify_process_event(jsonb_build_object('identity','order:rollback','event_type','order_approved','subscription_id','rollback','customer_email','owner@example.invalid','checkout_code','HHpoAGt','plan','pro','access_until','invalid')); EXCEPTION WHEN OTHERS THEN NULL; END;
       IF EXISTS(SELECT 1 FROM public.kiwify_subscription WHERE id='rollback') THEN RAISE EXCEPTION 'Transaction partially committed'; END IF;
