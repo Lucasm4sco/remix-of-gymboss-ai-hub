@@ -36,6 +36,13 @@
       "when": 1794537631837,
       "tag": "0004_kiwify_billing_trigger_authorization",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1794537759839,
+      "tag": "0005_kiwify_explicit_private_grants",
+      "breakpoints": true
     }
   ]
 }
