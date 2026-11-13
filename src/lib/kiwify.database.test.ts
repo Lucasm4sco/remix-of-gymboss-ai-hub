@@ -25,6 +25,7 @@ test("atomic Kiwify processing, deduplication, review and tenant isolation", { s
   const migration = readFileSync(new URL("../../drizzle/migrations/0003_kiwify_atomic_billing.sql", import.meta.url), "utf8");
   const triggerFix = readFileSync(new URL("../../drizzle/migrations/0004_kiwify_billing_trigger_authorization.sql", import.meta.url), "utf8");
   const privateGrants = readFileSync(new URL("../../drizzle/migrations/0005_kiwify_explicit_private_grants.sql", import.meta.url), "utf8");
+  const billingGuard = readFileSync(new URL("../../database/staged/0006_kiwify_billing_guard.sql", import.meta.url), "utf8");
   const assertions = `
     INSERT INTO public.academy(id,name,owner_email) VALUES ('00000000-0000-4000-8000-000000000001','A','owner@example.invalid'),('00000000-0000-4000-8000-000000000002','B','b@example.invalid');
     INSERT INTO public.academy_user VALUES ('00000000-0000-4000-8000-000000000001','owner@example.invalid','owner',true),('00000000-0000-4000-8000-000000000001','shared@example.invalid','admin',true),('00000000-0000-4000-8000-000000000002','shared@example.invalid','owner',true);
@@ -79,6 +80,6 @@ test("atomic Kiwify processing, deduplication, review and tenant isolation", { s
       IF EXISTS(SELECT 1 FROM public.kiwify_subscription WHERE id='rollback') THEN RAISE EXCEPTION 'Transaction partially committed'; END IF;
     END $$;
   `;
-  const result = spawnSync("psql", ["-X", "-h", "/tmp/kiwify/socket", "-p", "55439", "-U", "lovable", "-d", "postgres", "-v", "ON_ERROR_STOP=1"], { input: "BEGIN;" + bootstrap + migration + triggerFix + privateGrants + assertions + "ROLLBACK;", encoding: "utf8", env: { PATH: process.env.PATH } });
+  const result = spawnSync("psql", ["-X", "-h", "/tmp/kiwify/socket", "-p", "55439", "-U", "lovable", "-d", "postgres", "-v", "ON_ERROR_STOP=1"], { input: "BEGIN;" + bootstrap + migration + triggerFix + privateGrants + billingGuard + assertions + "ROLLBACK;", encoding: "utf8", env: { PATH: process.env.PATH } });
   assert.equal(result.status, 0, result.stderr);
 });
