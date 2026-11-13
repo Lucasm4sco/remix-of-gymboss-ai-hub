@@ -11,7 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { Dumbbell } from "lucide-react";
 import { useTenant } from "@/lib/tenant-context";
-import { accessDestination } from "@/lib/access-destination";
+import { firstAccessDestination } from "@/lib/access-destination";
 
 export const Route = createFileRoute("/entrar")({ component: Entrar, head: () => ({ meta: [
   { title: "Entrar — Gym Spotter" },
@@ -25,17 +25,16 @@ export const Route = createFileRoute("/entrar")({ component: Entrar, head: () =>
 function Entrar() {
   const { user, loading, signIn, signUp } = useAuth();
   const navigate = useNavigate();
-  const { tenant, loading: tenantLoading, error: tenantError } = useTenant();
+  const { tenant, loading: tenantLoading, error: tenantError, refetch } = useTenant();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [confirmationPending, setConfirmationPending] = useState(false);
 
   useEffect(() => {
-    if (!loading && user && !tenantLoading && tenant) {
-      navigate({ to: accessDestination(tenant), replace: true });
-    }
-  }, [user, loading, tenantLoading, tenant, navigate]);
+    const destination = firstAccessDestination({ authenticated: !!user, authLoading: loading, tenantLoading, tenantError, tenant });
+    if (destination) navigate({ to: destination, replace: true });
+  }, [user, loading, tenantLoading, tenantError, tenant, navigate]);
 
   const onLogin = async (e: React.FormEvent) => {
     e.preventDefault(); setBusy(true);
@@ -72,7 +71,10 @@ function Entrar() {
         </div>
         <Card>
           <CardContent className="p-6">
-            {tenantError && <p role="alert" className="mb-4 text-sm text-destructive">Não foi possível verificar seu acesso. Recarregue a página para tentar novamente.</p>}
+            {tenantError && <div className="mb-4 space-y-2">
+              <p role="alert" className="text-sm text-destructive">Não foi possível verificar seu acesso. Tente novamente.</p>
+              <Button type="button" variant="outline" disabled={tenantLoading} onClick={() => { void refetch(); }}>Tentar novamente</Button>
+            </div>}
             {confirmationPending && <p role="status" className="mb-4 text-sm text-muted-foreground">Confira sua caixa de entrada e confirme o cadastro pelo link enviado.</p>}
             <Tabs defaultValue="login">
               <TabsList className="grid w-full grid-cols-2">

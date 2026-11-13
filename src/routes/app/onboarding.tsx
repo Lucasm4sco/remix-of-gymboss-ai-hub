@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useTenant } from "@/lib/tenant-context";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,6 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Check } from "lucide-react";
+import { accessDestination } from "@/lib/access-destination";
+import { completeOnboarding, type OnboardingProgress } from "@/lib/onboarding-setup";
 
 export const Route = createFileRoute("/app/onboarding")({ component: Onboarding, head: () => ({ meta: [{"title": "Primeiro acesso · Academia | Gym Spotter"}, {"name": "description", "content": "Primeiro acesso — Gym Spotter, gestão de academias."}, {"property": "og:title", "content": "Primeiro acesso · Academia | Gym Spotter"}, {"property": "og:description", "content": "Primeiro acesso — Gym Spotter, gestão de academias."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
@@ -16,10 +18,13 @@ const STEPS = ["Dados","Branding","Equipe","Planos & Aulas","Finalizar"];
 
 function Onboarding() {
   const { user } = useAuth();
-  const { refetch } = useTenant();
+  const { tenant, loading: tenantLoading, error: tenantError, refetch } = useTenant();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [setupError, setSetupError] = useState<string | null>(null);
+  const progress = useRef<OnboardingProgress>({ academyId: null, plansSaved: false, teamSaved: false });
+  const submitting = useRef(false);
   const [data, setData] = useState({
     name: "", telefone: "", email: user?.email ?? "",
     cor_primaria: "#D97634",
@@ -31,39 +36,59 @@ function Onboarding() {
     ],
   });
 
+  useEffect(() => {
+    if (!tenantLoading && !tenantError && tenant && (tenant.academyId || tenant.isSuperAdmin) && !progress.current.academyId) {
+      navigate({ to: accessDestination(tenant), replace: true });
+    }
+  }, [tenantLoading, tenantError, tenant, navigate]);
+
   const next = () => setStep((s) => Math.min(s + 1, STEPS.length - 1));
   const back = () => setStep((s) => Math.max(s - 1, 0));
 
   const finalize = async () => {
-    if (!user) return;
+    if (!user || tenantLoading || tenantError || submitting.current) return;
+    if (!progress.current.academyId && tenant && (tenant.academyId || tenant.isSuperAdmin)) {
+      navigate({ to: accessDestination(tenant), replace: true });
+      return;
+    }
+    submitting.current = true;
     setBusy(true);
+    setSetupError(null);
     try {
-      const { data: acRaw, error: aErr } = await supabase.rpc("create_academy_with_owner", {
-        p_name: data.name,
-        p_telefone: data.telefone,
-        p_email: data.email,
-        p_cor_primaria: data.cor_primaria,
-      }).single();
-      if (aErr || !acRaw) throw aErr ?? new Error("Falha ao criar academia");
-      const ac = acRaw as { id: string };
-
-      if (data.planos.length) {
-        await supabase.from("plan").insert(data.planos.map(p => ({ ...p, academy_id: ac.id })));
-      }
-
-      const emails = data.equipe.split(/[\n,]/).map(e => e.trim()).filter(Boolean);
-      if (emails.length) {
-        await supabase.from("academy_user").insert(emails.map(e => ({
-          academy_id: ac.id, email: e, role: "recepcao" as const, ativo: true,
-        })));
-      }
-
+      await completeOnboarding(progress.current, {
+        createAcademy: async () => {
+          const { data: ac, error } = await supabase.rpc("create_academy_with_owner", {
+            p_name: data.name, p_telefone: data.telefone, p_email: data.email, p_cor_primaria: data.cor_primaria,
+          }).single();
+          const created: unknown = ac;
+          if (error || !created || typeof created !== "object" || !("id" in created) || typeof created.id !== "string") {
+            throw new Error("Não foi possível confirmar a criação da academia. Verifique sua conexão e a confirmação do email antes de tentar novamente.");
+          }
+          return created.id;
+        },
+        savePlans: async (academyId) => {
+          if (!data.planos.length) return;
+          const { error } = await supabase.from("plan").insert(data.planos.map(p => ({ ...p, academy_id: academyId })));
+          if (error) throw new Error("Academia criada, mas não foi possível salvar os planos. Tente novamente para concluir sem criar outra academia.");
+        },
+        saveTeam: async (academyId) => {
+          const emails = data.equipe.split(/[\n,]/).map(e => e.trim()).filter(Boolean);
+          if (!emails.length) return;
+          const { error } = await supabase.from("academy_user").insert(emails.map(email => ({
+            academy_id: academyId, email, role: "recepcao" as const, ativo: true,
+          })));
+          if (error) throw new Error("Academia e planos salvos, mas não foi possível salvar a equipe. Tente novamente para concluir sem repetir os cadastros já salvos.");
+        },
+      });
+      const result = await refetch();
+      if (result.error || !result.data?.academyId) throw new Error("Configuração salva, mas não foi possível confirmar seu acesso. Tente novamente; os cadastros já salvos não serão repetidos.");
       toast.success("Academia criada!");
-      await refetch();
       navigate({ to: "/app/dashboard", replace: true });
-    } catch (e: any) {
-      toast.error(e.message ?? "Erro ao criar academia");
-    } finally { setBusy(false); }
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : "Não foi possível concluir a configuração. Tente novamente.";
+      setSetupError(message);
+      toast.error(message);
+    } finally { submitting.current = false; setBusy(false); }
   };
 
   return (
@@ -83,6 +108,11 @@ function Onboarding() {
       </div>
 
       <Card><CardContent className="p-6 space-y-4">
+        {tenantError && <div className="space-y-2">
+          <p role="alert" className="text-sm text-destructive">Não foi possível verificar seu acesso. Nenhuma nova academia será criada enquanto houver este erro.</p>
+          <Button type="button" variant="outline" disabled={tenantLoading} onClick={() => { void refetch(); }}>Tentar novamente</Button>
+        </div>}
+        {setupError && <p role="alert" className="text-sm text-destructive">{setupError}</p>}
         {step === 0 && (<>
           <div><Label>Nome da academia *</Label><Input value={data.name} onChange={(e)=>setData({...data, name: e.target.value})} required /></div>
           <div><Label>Telefone</Label><Input value={data.telefone} onChange={(e)=>setData({...data, telefone: e.target.value})} /></div>
@@ -122,11 +152,11 @@ function Onboarding() {
         </>)}
 
         <div className="flex justify-between pt-4">
-          <Button variant="outline" onClick={back} disabled={step === 0 || busy}>Voltar</Button>
+          <Button variant="outline" onClick={back} disabled={step === 0 || busy || !!progress.current.academyId}>Voltar</Button>
           {step < STEPS.length - 1 ? (
             <Button onClick={next} disabled={step === 0 && !data.name}>Continuar</Button>
           ) : (
-            <Button onClick={finalize} disabled={busy}>Criar academia</Button>
+            <Button onClick={finalize} disabled={busy || tenantLoading || !!tenantError}>{progress.current.academyId ? "Tentar novamente" : "Criar academia"}</Button>
           )}
         </div>
       </CardContent></Card>

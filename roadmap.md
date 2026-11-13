@@ -1,4 +1,5 @@
 # First owner access
+- [x] Client first access: completed empty-tenant routing and retry-safe onboarding failures verified; 23 tests pass, 1 disposable SQL test skipped, automatic build/typecheck OK; real linked-client redirect and simulated partial failures checked without publication.
 - [x] Kiwify: signed webhook, atomic processing, Master review, tenant isolation, official signature vector and disposable SQL tests implemented; authenticated Master empty state verified on desktop/mobile.
 - [ ] Kiwify activation: user must register the webhook and save KIWIFY_WEBHOOK_TOKEN securely; publication and real-payment end-to-end checks are deliberately pending.
 - [x] Restrict owner bootstrap and close cross-academy self-enrollment paths.
