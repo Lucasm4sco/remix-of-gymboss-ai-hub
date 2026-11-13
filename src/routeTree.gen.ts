@@ -41,6 +41,7 @@ import { Route as DemoEquipeRouteImport } from './routes/demo/equipe'
 import { Route as DemoFinanceiroRouteImport } from './routes/demo/financeiro'
 import { Route as DemoPlanosRouteImport } from './routes/demo/planos'
 import { Route as DemoRelatoriosRouteImport } from './routes/demo/relatorios'
+import { Route as MasterAssinaturasRouteImport } from './routes/master/assinaturas'
 import { Route as MasterConfiguracoesRouteImport } from './routes/master/configuracoes'
 import { Route as MasterListaAcademiasRouteImport } from './routes/master/listaAcademias'
 import { Route as MasterNovaAcademiaRouteImport } from './routes/master/novaAcademia'
@@ -207,6 +208,11 @@ const DemoRelatoriosRoute = DemoRelatoriosRouteImport.update({
   path: '/relatorios',
   getParentRoute: () => DemoRoute,
 } as any)
+const MasterAssinaturasRoute = MasterAssinaturasRouteImport.update({
+  id: '/assinaturas',
+  path: '/assinaturas',
+  getParentRoute: () => MasterRoute,
+} as any)
 const MasterConfiguracoesRoute = MasterConfiguracoesRouteImport.update({
   id: '/configuracoes',
   path: '/configuracoes',
@@ -266,6 +272,7 @@ export interface FileRoutesByFullPath {
   '/demo/financeiro': typeof DemoFinanceiroRoute
   '/demo/planos': typeof DemoPlanosRoute
   '/demo/relatorios': typeof DemoRelatoriosRoute
+  '/master/assinaturas': typeof MasterAssinaturasRoute
   '/master/configuracoes': typeof MasterConfiguracoesRoute
   '/master/listaAcademias': typeof MasterListaAcademiasRoute
   '/master/novaAcademia': typeof MasterNovaAcademiaRoute
@@ -305,6 +312,7 @@ export interface FileRoutesByTo {
   '/demo/financeiro': typeof DemoFinanceiroRoute
   '/demo/planos': typeof DemoPlanosRoute
   '/demo/relatorios': typeof DemoRelatoriosRoute
+  '/master/assinaturas': typeof MasterAssinaturasRoute
   '/master/configuracoes': typeof MasterConfiguracoesRoute
   '/master/listaAcademias': typeof MasterListaAcademiasRoute
   '/master/novaAcademia': typeof MasterNovaAcademiaRoute
@@ -345,6 +353,7 @@ export interface FileRoutesById {
   '/demo/financeiro': typeof DemoFinanceiroRoute
   '/demo/planos': typeof DemoPlanosRoute
   '/demo/relatorios': typeof DemoRelatoriosRoute
+  '/master/assinaturas': typeof MasterAssinaturasRoute
   '/master/configuracoes': typeof MasterConfiguracoesRoute
   '/master/listaAcademias': typeof MasterListaAcademiasRoute
   '/master/novaAcademia': typeof MasterNovaAcademiaRoute
@@ -386,6 +395,7 @@ export interface FileRouteTypes {
     | '/demo/financeiro'
     | '/demo/planos'
     | '/demo/relatorios'
+    | '/master/assinaturas'
     | '/master/configuracoes'
     | '/master/listaAcademias'
     | '/master/novaAcademia'
@@ -425,6 +435,7 @@ export interface FileRouteTypes {
     | '/demo/financeiro'
     | '/demo/planos'
     | '/demo/relatorios'
+    | '/master/assinaturas'
     | '/master/configuracoes'
     | '/master/listaAcademias'
     | '/master/novaAcademia'
@@ -464,6 +475,7 @@ export interface FileRouteTypes {
     | '/demo/financeiro'
     | '/demo/planos'
     | '/demo/relatorios'
+    | '/master/assinaturas'
     | '/master/configuracoes'
     | '/master/listaAcademias'
     | '/master/novaAcademia'
@@ -710,6 +722,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoRelatoriosRouteImport
       parentRoute: typeof DemoRoute
     }
+    '/master/assinaturas': {
+      id: '/master/assinaturas'
+      path: '/assinaturas'
+      fullPath: '/master/assinaturas'
+      preLoaderRoute: typeof MasterAssinaturasRouteImport
+      parentRoute: typeof MasterRoute
+    }
     '/master/configuracoes': {
       id: '/master/configuracoes'
       path: '/configuracoes'
@@ -811,6 +830,7 @@ const DemoRouteChildren: DemoRouteChildren = {
 const DemoRouteWithChildren = DemoRoute._addFileChildren(DemoRouteChildren)
 
 interface MasterRouteChildren {
+  MasterAssinaturasRoute: typeof MasterAssinaturasRoute
   MasterConfiguracoesRoute: typeof MasterConfiguracoesRoute
   MasterListaAcademiasRoute: typeof MasterListaAcademiasRoute
   MasterNovaAcademiaRoute: typeof MasterNovaAcademiaRoute
@@ -818,6 +838,7 @@ interface MasterRouteChildren {
 }
 
 const MasterRouteChildren: MasterRouteChildren = {
+  MasterAssinaturasRoute: MasterAssinaturasRoute,
   MasterConfiguracoesRoute: MasterConfiguracoesRoute,
   MasterListaAcademiasRoute: MasterListaAcademiasRoute,
   MasterNovaAcademiaRoute: MasterNovaAcademiaRoute,
