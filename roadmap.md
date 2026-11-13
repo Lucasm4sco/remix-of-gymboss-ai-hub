@@ -1,4 +1,5 @@
 # First owner access
+- [ ] Audit public access and billing without credentials or live mutations; correct misleading metrics, plan editing and confirmed form bugs; validate locally and inspect the final diff.
 - [x] Client first access: completed empty-tenant routing and retry-safe onboarding failures verified; 23 tests pass, 1 disposable SQL test skipped, automatic build/typecheck OK; real linked-client redirect and simulated partial failures checked without publication.
 - [x] Kiwify: signed webhook, atomic processing, Master review, tenant isolation, official signature vector and disposable SQL tests implemented; authenticated Master empty state verified on desktop/mobile.
 - [ ] Kiwify activation: user must register the webhook and save KIWIFY_WEBHOOK_TOKEN securely; publication and real-payment end-to-end checks are deliberately pending.
