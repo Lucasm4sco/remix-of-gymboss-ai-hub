@@ -1,4 +1,5 @@
 # First owner access
+- [ ] Kiwify: implement signed webhook, atomic subscription processing, Master review, tenant isolation and tests; production token and publication remain user-controlled.
 - [x] Restrict owner bootstrap and close cross-academy self-enrollment paths.
 - [x] Correct public login returns and signup confirmation state.
 - [x] Verify destination tests, anonymous claim denial, signed-out Master and mobile login.

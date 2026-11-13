@@ -1,4 +1,5 @@
 # Access architecture
+- Kiwify billing uses a signed public server route and service-only atomic RPCs; store normalized billing fields, never raw payloads, and quarantine unverified deliveries because Kiwify test webhooks are indistinguishable from real events.
 - Keep privileges in protected `public.user_roles`; browser navigation never grants permissions, because server-side RLS is authoritative.
 - Bootstrap the initial owner only from an explicitly selected, provider-verified identity; ordinary signup must never claim global administration.
 - Resolve login destinations after session and tenant permissions load, using public OAuth return pages to avoid transient-session redirects.
