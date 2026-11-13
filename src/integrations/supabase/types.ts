@@ -290,6 +290,124 @@ export type Database = {
           },
         ]
       }
+      kiwify_event: {
+        Row: {
+          access_until: string | null
+          applied_at: string | null
+          checkout_code: string
+          customer_email: string | null
+          event_type: string
+          id: string
+          identity: string
+          order_id: string | null
+          order_status: string | null
+          plan: Database["public"]["Enums"]["academy_plan"] | null
+          reason: string | null
+          received_at: string
+          state: string
+          subscription_id: string | null
+        }
+        Insert: {
+          access_until?: string | null
+          applied_at?: string | null
+          checkout_code?: string
+          customer_email?: string | null
+          event_type: string
+          id?: string
+          identity: string
+          order_id?: string | null
+          order_status?: string | null
+          plan?: Database["public"]["Enums"]["academy_plan"] | null
+          reason?: string | null
+          received_at?: string
+          state?: string
+          subscription_id?: string | null
+        }
+        Update: {
+          access_until?: string | null
+          applied_at?: string | null
+          checkout_code?: string
+          customer_email?: string | null
+          event_type?: string
+          id?: string
+          identity?: string
+          order_id?: string | null
+          order_status?: string | null
+          plan?: Database["public"]["Enums"]["academy_plan"] | null
+          reason?: string | null
+          received_at?: string
+          state?: string
+          subscription_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kiwify_event_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "kiwify_subscription"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kiwify_subscription: {
+        Row: {
+          academy_id: string | null
+          access_until: string | null
+          checkout_code: string
+          created_at: string
+          customer_email: string
+          id: string
+          last_paid_until: string | null
+          manual_binding: boolean
+          plan: Database["public"]["Enums"]["academy_plan"] | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          state: string
+          updated_at: string
+          verified: boolean
+        }
+        Insert: {
+          academy_id?: string | null
+          access_until?: string | null
+          checkout_code: string
+          created_at?: string
+          customer_email: string
+          id: string
+          last_paid_until?: string | null
+          manual_binding?: boolean
+          plan?: Database["public"]["Enums"]["academy_plan"] | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          state?: string
+          updated_at?: string
+          verified?: boolean
+        }
+        Update: {
+          academy_id?: string | null
+          access_until?: string | null
+          checkout_code?: string
+          created_at?: string
+          customer_email?: string
+          id?: string
+          last_paid_until?: string | null
+          manual_binding?: boolean
+          plan?: Database["public"]["Enums"]["academy_plan"] | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          state?: string
+          updated_at?: string
+          verified?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kiwify_subscription_academy_id_fkey"
+            columns: ["academy_id"]
+            isOneToOne: false
+            referencedRelation: "academy"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lead: {
         Row: {
           academy_id: string
@@ -665,6 +783,14 @@ export type Database = {
         Returns: boolean
       }
       is_super_admin: { Args: never; Returns: boolean }
+      kiwify_access_allowed: { Args: { p_academy: string }; Returns: boolean }
+      kiwify_apply_event: { Args: { p_id: string }; Returns: undefined }
+      kiwify_candidates: { Args: { p_email: string }; Returns: string[] }
+      kiwify_process_event: { Args: { p_event: Json }; Returns: Json }
+      kiwify_resolve: {
+        Args: { p_academy: string; p_actor: string; p_subscription: string }
+        Returns: undefined
+      }
       user_academy_ids: { Args: never; Returns: string[] }
       user_can_manage_academy: {
         Args: { _academy_id: string }

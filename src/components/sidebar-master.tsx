@@ -1,11 +1,12 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
-import { Building2, BarChart3, PlusSquare, LogOut, Dumbbell, Settings } from "lucide-react";
+import { Building2, BarChart3, PlusSquare, LogOut, Dumbbell, Settings, CreditCard } from "lucide-react";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { useAuth } from "@/lib/auth-context";
 
 const items = [
   { title: "Painel", url: "/master/painel", icon: BarChart3 },
   { title: "Academias", url: "/master/listaAcademias", icon: Building2 },
+  { title: "Assinaturas Kiwify", url: "/master/assinaturas", icon: CreditCard },
   { title: "Nova academia", url: "/master/novaAcademia", icon: PlusSquare },
   { title: "Configuracoes do sistema", url: "/master/configuracoes", icon: Settings },
 ];

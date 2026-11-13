@@ -41,10 +41,12 @@ import { Route as DemoEquipeRouteImport } from './routes/demo/equipe'
 import { Route as DemoFinanceiroRouteImport } from './routes/demo/financeiro'
 import { Route as DemoPlanosRouteImport } from './routes/demo/planos'
 import { Route as DemoRelatoriosRouteImport } from './routes/demo/relatorios'
+import { Route as MasterAssinaturasRouteImport } from './routes/master/assinaturas'
 import { Route as MasterConfiguracoesRouteImport } from './routes/master/configuracoes'
 import { Route as MasterListaAcademiasRouteImport } from './routes/master/listaAcademias'
 import { Route as MasterNovaAcademiaRouteImport } from './routes/master/novaAcademia'
 import { Route as MasterPainelRouteImport } from './routes/master/painel'
+import { Route as ApiPublicKiwifyWebhookRouteImport } from './routes/api/public/kiwify/webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -206,6 +208,11 @@ const DemoRelatoriosRoute = DemoRelatoriosRouteImport.update({
   path: '/relatorios',
   getParentRoute: () => DemoRoute,
 } as any)
+const MasterAssinaturasRoute = MasterAssinaturasRouteImport.update({
+  id: '/assinaturas',
+  path: '/assinaturas',
+  getParentRoute: () => MasterRoute,
+} as any)
 const MasterConfiguracoesRoute = MasterConfiguracoesRouteImport.update({
   id: '/configuracoes',
   path: '/configuracoes',
@@ -225,6 +232,11 @@ const MasterPainelRoute = MasterPainelRouteImport.update({
   id: '/painel',
   path: '/painel',
   getParentRoute: () => MasterRoute,
+} as any)
+const ApiPublicKiwifyWebhookRoute = ApiPublicKiwifyWebhookRouteImport.update({
+  id: '/api/public/kiwify/webhook',
+  path: '/api/public/kiwify/webhook',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -260,10 +272,12 @@ export interface FileRoutesByFullPath {
   '/demo/financeiro': typeof DemoFinanceiroRoute
   '/demo/planos': typeof DemoPlanosRoute
   '/demo/relatorios': typeof DemoRelatoriosRoute
+  '/master/assinaturas': typeof MasterAssinaturasRoute
   '/master/configuracoes': typeof MasterConfiguracoesRoute
   '/master/listaAcademias': typeof MasterListaAcademiasRoute
   '/master/novaAcademia': typeof MasterNovaAcademiaRoute
   '/master/painel': typeof MasterPainelRoute
+  '/api/public/kiwify/webhook': typeof ApiPublicKiwifyWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -298,10 +312,12 @@ export interface FileRoutesByTo {
   '/demo/financeiro': typeof DemoFinanceiroRoute
   '/demo/planos': typeof DemoPlanosRoute
   '/demo/relatorios': typeof DemoRelatoriosRoute
+  '/master/assinaturas': typeof MasterAssinaturasRoute
   '/master/configuracoes': typeof MasterConfiguracoesRoute
   '/master/listaAcademias': typeof MasterListaAcademiasRoute
   '/master/novaAcademia': typeof MasterNovaAcademiaRoute
   '/master/painel': typeof MasterPainelRoute
+  '/api/public/kiwify/webhook': typeof ApiPublicKiwifyWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -337,10 +353,12 @@ export interface FileRoutesById {
   '/demo/financeiro': typeof DemoFinanceiroRoute
   '/demo/planos': typeof DemoPlanosRoute
   '/demo/relatorios': typeof DemoRelatoriosRoute
+  '/master/assinaturas': typeof MasterAssinaturasRoute
   '/master/configuracoes': typeof MasterConfiguracoesRoute
   '/master/listaAcademias': typeof MasterListaAcademiasRoute
   '/master/novaAcademia': typeof MasterNovaAcademiaRoute
   '/master/painel': typeof MasterPainelRoute
+  '/api/public/kiwify/webhook': typeof ApiPublicKiwifyWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -377,10 +395,12 @@ export interface FileRouteTypes {
     | '/demo/financeiro'
     | '/demo/planos'
     | '/demo/relatorios'
+    | '/master/assinaturas'
     | '/master/configuracoes'
     | '/master/listaAcademias'
     | '/master/novaAcademia'
     | '/master/painel'
+    | '/api/public/kiwify/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -415,10 +435,12 @@ export interface FileRouteTypes {
     | '/demo/financeiro'
     | '/demo/planos'
     | '/demo/relatorios'
+    | '/master/assinaturas'
     | '/master/configuracoes'
     | '/master/listaAcademias'
     | '/master/novaAcademia'
     | '/master/painel'
+    | '/api/public/kiwify/webhook'
   id:
     | '__root__'
     | '/'
@@ -453,10 +475,12 @@ export interface FileRouteTypes {
     | '/demo/financeiro'
     | '/demo/planos'
     | '/demo/relatorios'
+    | '/master/assinaturas'
     | '/master/configuracoes'
     | '/master/listaAcademias'
     | '/master/novaAcademia'
     | '/master/painel'
+    | '/api/public/kiwify/webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -469,6 +493,7 @@ export interface RootRouteChildren {
   MasterRoute: typeof MasterRouteWithChildren
   ResetSenhaRoute: typeof ResetSenhaRoute
   AgendarSlugRoute: typeof AgendarSlugRoute
+  ApiPublicKiwifyWebhookRoute: typeof ApiPublicKiwifyWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -697,6 +722,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoRelatoriosRouteImport
       parentRoute: typeof DemoRoute
     }
+    '/master/assinaturas': {
+      id: '/master/assinaturas'
+      path: '/assinaturas'
+      fullPath: '/master/assinaturas'
+      preLoaderRoute: typeof MasterAssinaturasRouteImport
+      parentRoute: typeof MasterRoute
+    }
     '/master/configuracoes': {
       id: '/master/configuracoes'
       path: '/configuracoes'
@@ -724,6 +756,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/master/painel'
       preLoaderRoute: typeof MasterPainelRouteImport
       parentRoute: typeof MasterRoute
+    }
+    '/api/public/kiwify/webhook': {
+      id: '/api/public/kiwify/webhook'
+      path: '/api/public/kiwify/webhook'
+      fullPath: '/api/public/kiwify/webhook'
+      preLoaderRoute: typeof ApiPublicKiwifyWebhookRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -791,6 +830,7 @@ const DemoRouteChildren: DemoRouteChildren = {
 const DemoRouteWithChildren = DemoRoute._addFileChildren(DemoRouteChildren)
 
 interface MasterRouteChildren {
+  MasterAssinaturasRoute: typeof MasterAssinaturasRoute
   MasterConfiguracoesRoute: typeof MasterConfiguracoesRoute
   MasterListaAcademiasRoute: typeof MasterListaAcademiasRoute
   MasterNovaAcademiaRoute: typeof MasterNovaAcademiaRoute
@@ -798,6 +838,7 @@ interface MasterRouteChildren {
 }
 
 const MasterRouteChildren: MasterRouteChildren = {
+  MasterAssinaturasRoute: MasterAssinaturasRoute,
   MasterConfiguracoesRoute: MasterConfiguracoesRoute,
   MasterListaAcademiasRoute: MasterListaAcademiasRoute,
   MasterNovaAcademiaRoute: MasterNovaAcademiaRoute,
@@ -817,6 +858,7 @@ const rootRouteChildren: RootRouteChildren = {
   MasterRoute: MasterRouteWithChildren,
   ResetSenhaRoute: ResetSenhaRoute,
   AgendarSlugRoute: AgendarSlugRoute,
+  ApiPublicKiwifyWebhookRoute: ApiPublicKiwifyWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -22,6 +22,27 @@
       "when": 1794453446529,
       "tag": "0002_restrict_has_role_to_authorized_callers",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794537474143,
+      "tag": "0003_kiwify_atomic_billing",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794537631837,
+      "tag": "0004_kiwify_billing_trigger_authorization",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1794537759839,
+      "tag": "0005_kiwify_explicit_private_grants",
+      "breakpoints": true
     }
   ]
 }
