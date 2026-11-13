@@ -38,7 +38,7 @@ function Subscriptions() {
     return { subscriptions: subscriptions.data, events: events.data, academies: academies.data };
   } });
   async function associate(subscriptionId: string) {
-    const academyId = selected[subscriptionId];
+    const academyId = selected[subscriptionId] ?? data?.subscriptions.find(s => s.id === subscriptionId)?.academy_id;
     if (!academyId || !confirmed[subscriptionId]) return;
     setBusy(true);
     try {
@@ -66,7 +66,7 @@ function Subscriptions() {
             <SelectContent>{data.academies.map(a => <SelectItem key={a.id} value={a.id}>{a.name}</SelectItem>)}</SelectContent>
           </Select>
           <div className="flex items-start gap-2"><Checkbox id={`confirm-${s.id}`} checked={confirmed[s.id] ?? false} onCheckedChange={value => setConfirmed(previous => ({ ...previous, [s.id]: value === true }))} /><Label htmlFor={`confirm-${s.id}`} className="leading-5">Conferi na Kiwify a compra real e a academia destinatária; não é um webhook de teste.</Label></div>
-          <Button disabled={busy || !confirmed[s.id] || !selected[s.id]} onClick={() => associate(s.id)}>Confirmar associação</Button>
+          <Button disabled={busy || !confirmed[s.id] || !(selected[s.id] ?? s.academy_id)} onClick={() => associate(s.id)}>Confirmar associação</Button>
         </>}
         {data.events.filter(e => e.subscription_id === s.id).map(e => <p key={e.id} className="break-words text-xs text-muted-foreground">{e.event_type} · {e.reason ?? "Pendente"}</p>)}
       </section>;
