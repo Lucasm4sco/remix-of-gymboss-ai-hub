@@ -25,7 +25,7 @@ BEGIN
  -- Preserve trusted service processors and direct owner maintenance, not their
  -- authenticated SET ROLE sessions. Super-admin authorization remains UID-based.
  IF caller_role = 'service_role' OR caller_role = subscription_owner
-    OR (auth.uid() IS NOT NULL AND public.is_super_admin()) THEN
+    OR (caller_role = 'authenticated' AND auth.uid() IS NOT NULL AND public.is_super_admin()) THEN
    RETURN NEW;
  END IF;
 
