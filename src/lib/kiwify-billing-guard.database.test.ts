@@ -62,7 +62,7 @@ const cases: Array<[string, string]> = [
 
 for (const [name, sql] of cases) {
   test(name, { skip: !enabled }, () => {
-    const fix = readFileSync(new URL("../../drizzle/staged/0006_kiwify_billing_guard.sql", import.meta.url), "utf8");
+    const fix = readFileSync(new URL("../../database/staged/0006_kiwify_billing_guard.sql", import.meta.url), "utf8");
     runSql(fix + sql);
   });
 }

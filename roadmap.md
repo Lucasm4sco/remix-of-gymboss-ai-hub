@@ -1,6 +1,6 @@
 # First owner access
 - [x] Audit public access and billing without credentials or live mutations; corrected misleading metrics, tenant-scoped plan editing, onboarding validation and access error states; 32 tests pass including disposable SQL; synthetic desktop/mobile UI verified.
-- [ ] Billing trigger protection: invoker cannot see private subscription rows; bypass reproduced in disposable SQL. Fix requires an authorized database change in an isolated backend; shared production backend was not modified.
+- [ ] Billing trigger protection: source-only SQL staged outside the managed journal, with disposable regression tests; applying it to a separately authorized backend remains blocked by the no-production-mutations rule. Shared production backend remains unchanged and vulnerable until application.
 - [ ] Durable onboarding/provisioning and temporary-password lifecycle: server-side retry guards and rotation require a separately reviewed backend change; no real credentials or client data may be used here.
 - [x] Client first access: completed empty-tenant routing and retry-safe onboarding failures verified; 23 tests pass, 1 disposable SQL test skipped, automatic build/typecheck OK; real linked-client redirect and simulated partial failures checked without publication.
 - [x] Kiwify: signed webhook, atomic processing, Master review, tenant isolation, official signature vector and disposable SQL tests implemented; authenticated Master empty state verified on desktop/mobile.
