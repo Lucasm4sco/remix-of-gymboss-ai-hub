@@ -6,12 +6,13 @@ import { useTenant } from "@/lib/tenant-context";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { SidebarTenant } from "@/components/sidebar-tenant";
 import { TrialBanner } from "@/components/trial-banner";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/app")({ component: AppLayout });
 
 function AppLayout() {
   const { user, loading } = useAuth();
-  const { tenant, loading: tLoading } = useTenant();
+  const { tenant, loading: tLoading, error: tenantError, refetch } = useTenant();
   const navigate = useNavigate();
   const path = useRouterState({ select: s => s.location.pathname });
 
@@ -19,6 +20,7 @@ function AppLayout() {
     if (loading) return;
     if (!user) { navigate({ to: "/entrar", replace: true }); return; }
     if (tLoading) return;
+    if (tenantError) return;
     if (tenant?.isSuperAdmin && !tenant.academyId && path !== "/app/onboarding") {
       navigate({ to: "/master/painel", replace: true }); return;
     }
@@ -29,7 +31,14 @@ function AppLayout() {
         navigate({ to: "/app/onboarding", replace: true });
       }
     }
-  }, [user, loading, tenant, tLoading, navigate, path]);
+  }, [user, loading, tenant, tLoading, tenantError, navigate, path]);
+
+  if (user && !loading && !tLoading && tenantError) {
+    return <div className="flex min-h-screen flex-col items-center justify-center gap-3 p-4">
+      <p role="alert">Não foi possível verificar seu acesso. Tente novamente.</p>
+      <Button variant="outline" onClick={() => { void refetch(); }}>Tentar novamente</Button>
+    </div>;
+  }
 
   if (loading || tLoading || !user || (!tenant?.academyId && path !== "/app/onboarding")) {
     return <div className="flex min-h-screen items-center justify-center text-muted-foreground">Carregando…</div>;

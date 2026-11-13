@@ -6,19 +6,27 @@ import { useTenant } from "@/lib/tenant-context";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { SidebarMaster } from "@/components/sidebar-master";
 import { accessDestination } from "@/lib/access-destination";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/master")({ component: MasterLayout });
 
 function MasterLayout() {
   const { user, loading } = useAuth();
-  const { tenant, loading: tLoading } = useTenant();
+  const { tenant, loading: tLoading, error: tenantError, refetch } = useTenant();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (loading || tLoading) return;
+    if (loading || tLoading || tenantError) return;
     if (!user) navigate({ to: "/entrar", replace: true });
     else if (tenant && !tenant.isSuperAdmin) navigate({ to: accessDestination(tenant), replace: true });
-  }, [user, loading, tenant, tLoading, navigate]);
+  }, [user, loading, tenant, tLoading, tenantError, navigate]);
+
+  if (user && !loading && !tLoading && tenantError) {
+    return <div className="flex min-h-screen flex-col items-center justify-center gap-3 p-4">
+      <p role="alert">Não foi possível verificar seu acesso. Tente novamente.</p>
+      <Button variant="outline" onClick={() => { void refetch(); }}>Tentar novamente</Button>
+    </div>;
+  }
 
   if (loading || tLoading || !user || !tenant?.isSuperAdmin) {
     return <div className="flex min-h-screen items-center justify-center text-muted-foreground">Verificando acesso…</div>;

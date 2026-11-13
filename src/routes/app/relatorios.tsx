@@ -30,6 +30,7 @@ function RelatoriosPage() {
         <h1 className="text-2xl font-bold">Relatório Gym Spotter</h1>
         <p className="text-sm text-muted-foreground">Gerado em {new Date().toLocaleString("pt-BR")}</p>
       </div>
+      <p role="status" className="mb-6 text-sm text-warning">Demonstração: todos os gráficos abaixo usam dados fictícios, não os registros da sua academia. Esta indicação também acompanha a impressão.</p>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card><CardContent className="p-5">
