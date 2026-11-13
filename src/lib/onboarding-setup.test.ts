@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
-import { completeOnboarding, type OnboardingProgress } from "./onboarding-setup";
+import { completeOnboarding, validateOnboarding, type OnboardingProgress } from "./onboarding-setup";
 
 test("plan failure is surfaced; retry uses the confirmed academy only once", async () => {
   const progress: OnboardingProgress = { academyId: null, plansSaved: false, teamSaved: false };
@@ -33,4 +33,21 @@ test("team failure is surfaced; retry never repeats saved plans or academy", asy
   assert.equal(team, 2);
   await completeOnboarding(progress, actions);
   assert.equal(team, 2);
+});
+
+const setup = { name: "Academia de teste", email: "", equipe: "", planos: [{ name: "Mensal", price: 97, duration_months: 1 }] };
+test("onboarding rejects whitespace-only academy names before creation", () => {
+  assert.notEqual(validateOnboarding({ ...setup, name: "  " }), null);
+  assert.equal(validateOnboarding(setup), null);
+});
+test("onboarding rejects invalid optional contact email", () => {
+  assert.notEqual(validateOnboarding({ ...setup, email: "invalid" }), null);
+});
+test("onboarding rejects invalid team email before partial creation", () => {
+  assert.notEqual(validateOnboarding({ ...setup, equipe: "invalid" }), null);
+});
+test("onboarding rejects invalid initial plans before partial creation", () => {
+  for (const plan of [{ name: "", price: 97, duration_months: 1 }, { name: "Mensal", price: -1, duration_months: 1 }, { name: "Mensal", price: 97, duration_months: 0 }]) {
+    assert.notEqual(validateOnboarding({ ...setup, planos: [plan] }), null);
+  }
 });

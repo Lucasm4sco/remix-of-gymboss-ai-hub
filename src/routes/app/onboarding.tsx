@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Check } from "lucide-react";
 import { accessDestination } from "@/lib/access-destination";
-import { completeOnboarding, type OnboardingProgress } from "@/lib/onboarding-setup";
+import { completeOnboarding, validateOnboarding, type OnboardingProgress } from "@/lib/onboarding-setup";
 
 export const Route = createFileRoute("/app/onboarding")({ component: Onboarding, head: () => ({ meta: [{"title": "Primeiro acesso · Academia | Gym Spotter"}, {"name": "description", "content": "Primeiro acesso — Gym Spotter, gestão de academias."}, {"property": "og:title", "content": "Primeiro acesso · Academia | Gym Spotter"}, {"property": "og:description", "content": "Primeiro acesso — Gym Spotter, gestão de academias."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
@@ -51,6 +51,8 @@ function Onboarding() {
       navigate({ to: accessDestination(tenant), replace: true });
       return;
     }
+    const validationError = validateOnboarding(data);
+    if (validationError) { setSetupError(validationError); toast.error(validationError); return; }
     submitting.current = true;
     setBusy(true);
     setSetupError(null);
@@ -154,7 +156,7 @@ function Onboarding() {
         <div className="flex justify-between pt-4">
           <Button variant="outline" onClick={back} disabled={step === 0 || busy || !!progress.current.academyId}>Voltar</Button>
           {step < STEPS.length - 1 ? (
-            <Button onClick={next} disabled={step === 0 && !data.name}>Continuar</Button>
+            <Button onClick={next} disabled={step === 0 && !data.name.trim()}>Continuar</Button>
           ) : (
             <Button onClick={finalize} disabled={busy || tenantLoading || !!tenantError}>{progress.current.academyId ? "Tentar novamente" : "Criar academia"}</Button>
           )}

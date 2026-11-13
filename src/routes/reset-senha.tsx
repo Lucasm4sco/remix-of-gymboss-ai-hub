@@ -18,7 +18,7 @@ function Reset() {
     const { error } = await supabase.auth.updateUser({ password });
     setBusy(false);
     if (error) toast.error(error.message);
-    else { toast.success("Senha atualizada."); navigate({ to: "/app/dashboard" }); }
+    else { toast.success("Senha atualizada."); navigate({ to: "/entrar", replace: true }); }
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">

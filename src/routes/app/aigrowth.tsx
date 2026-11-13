@@ -45,6 +45,7 @@ function AIGrowth() {
         title="AI Growth"
         description="Oportunidades detectadas pela IA. Dispare ações com 1 clique."
       />
+      <p role="status" className="mb-6 text-sm text-warning">Demonstração: oportunidades, valores e contatos fictícios; a IA e o envio de mensagens não estão disponíveis para os dados da sua academia.</p>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 mb-6">
         <Card className="bg-gradient-to-br from-primary to-primary text-foreground border-0">
