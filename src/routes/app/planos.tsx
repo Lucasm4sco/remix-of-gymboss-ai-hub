@@ -13,6 +13,7 @@ import { FormDialog } from "@/components/form-dialog";
 import { Plus, Check, Star } from "lucide-react";
 import { toast } from "sonner";
 import { fmtBRL } from "@/lib/format";
+import { emptyPlanForm, planFormSchema } from "@/lib/plan-form";
 
 export const Route = createFileRoute("/app/planos")({ component: Planos, head: () => ({ meta: [{"title": "Planos · Academia | Gym Spotter"}, {"name": "description", "content": "Planos — Gym Spotter, gestão de academias."}, {"property": "og:title", "content": "Planos · Academia | Gym Spotter"}, {"property": "og:description", "content": "Planos — Gym Spotter, gestão de academias."}, {"property": "og:type", "content": "website"}, {"name": "twitter:card", "content": "summary"}] }) });
 
@@ -21,23 +22,44 @@ function Planos() {
   const aid = tenant?.academyId;
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ name: "", price: 0, duration_months: 1, description: "", featured: false });
-  const { data: rows } = useQuery({
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [formAcademyId, setFormAcademyId] = useState<string | null>(null);
+  const [form, setForm] = useState(emptyPlanForm);
+  const { data: rows, error } = useQuery({
     queryKey: ["plans", aid], enabled: !!aid,
-    queryFn: async () => (await supabase.from("plan").select("*").eq("academy_id", aid!).order("price")).data ?? [],
+    queryFn: async () => {
+      if (!aid) throw new Error("Academia não selecionada.");
+      const { data, error } = await supabase.from("plan").select("*").eq("academy_id", aid).order("price");
+      if (error) throw new Error("Não foi possível carregar os planos.");
+      return data ?? [];
+    },
   });
   const create = useMutation({
-    mutationFn: async () => { const { error } = await supabase.from("plan").insert({ ...form, academy_id: aid! }); if (error) throw error; },
-    onSuccess: () => { toast.success("Plano criado"); setOpen(false); setForm({ name: "", price: 0, duration_months: 1, description: "", featured: false }); qc.invalidateQueries({ queryKey: ["plans"] }); },
-    onError: (e: any) => toast.error(e.message),
+    mutationFn: async () => {
+      if (!aid || formAcademyId !== aid) throw new Error("A academia selecionada mudou. Reabra o formulário.");
+      const parsed = planFormSchema.safeParse(form);
+      if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? "Confira os dados do plano.");
+      const query = editingId
+        ? supabase.from("plan").update(parsed.data).eq("id", editingId).eq("academy_id", aid)
+        : supabase.from("plan").insert({ ...parsed.data, academy_id: aid });
+      const { data, error } = await query.select("id").single();
+      if (error || !data) throw new Error("Não foi possível salvar o plano. Verifique seu acesso e tente novamente.");
+      return { academyId: aid, edited: !!editingId };
+    },
+    onSuccess: ({ academyId, edited }) => {
+      toast.success(edited ? "Plano atualizado" : "Plano criado"); setOpen(false); setEditingId(null); setForm(emptyPlanForm());
+      for (const key of ["plans", "dashboard", "public-booking"]) void qc.invalidateQueries({ queryKey: key === "public-booking" ? [key] : [key, academyId] });
+    },
+    onError: (e: Error) => toast.error(e.message),
   });
 
   return (
     <div>
       <PageHeader title="Planos" description={`${rows?.length ?? 0} plano(s) cadastrado(s)`} actions={
-        <Button onClick={() => setOpen(true)} className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4" />Novo plano</Button>
+        <Button disabled={!aid || create.isPending} onClick={() => { setEditingId(null); setForm(emptyPlanForm()); setFormAcademyId(aid ?? null); setOpen(true); }} className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4" />Novo plano</Button>
       } />
 
+      {error && <p role="alert" className="mb-4 text-sm text-destructive">Não foi possível carregar os planos. Tente novamente mais tarde.</p>}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {(rows ?? []).map(p => (
           <Card key={p.id} className={p.featured ? "border-primary border-2 relative" : ""}>
@@ -54,20 +76,23 @@ function Planos() {
                 {p.included_classes?.map((c: string) => <div key={c} className="flex items-center gap-2"><Check className="h-4 w-4 text-success" />{c}</div>)}
                 {p.total_checkins && <div className="flex items-center gap-2"><Check className="h-4 w-4 text-success" />{p.total_checkins} check-ins</div>}
               </div>
-              <Button variant="outline" className="w-full mt-5">Editar</Button>
+              <Button variant="outline" className="w-full mt-5" disabled={create.isPending || !aid} onClick={() => {
+                setEditingId(p.id); setFormAcademyId(aid ?? null);
+                setForm({ name: p.name, price: Number(p.price), duration_months: p.duration_months, description: p.description ?? "", featured: p.featured }); setOpen(true);
+              }}>Editar</Button>
             </CardContent>
           </Card>
         ))}
-        {!rows?.length && <div className="col-span-full text-center text-muted-foreground py-12">Nenhum plano cadastrado. Crie o primeiro!</div>}
+        {!error && rows?.length === 0 && <div className="col-span-full text-center text-muted-foreground py-12">Nenhum plano cadastrado. Crie o primeiro!</div>}
       </div>
 
-      <FormDialog open={open} onOpenChange={setOpen} title="Novo plano">
+      <FormDialog open={open} onOpenChange={(value) => { if (!create.isPending) setOpen(value); }} title={editingId ? "Editar plano" : "Novo plano"}>
         <form onSubmit={(e)=>{e.preventDefault(); create.mutate();}} className="space-y-3">
-          <div><Label>Nome *</Label><Input value={form.name} onChange={(e)=>setForm({...form, name: e.target.value})} required /></div>
-          <div><Label>Descrição</Label><Input value={form.description} onChange={(e)=>setForm({...form, description: e.target.value})} /></div>
+          <div><Label htmlFor="plan-name">Nome *</Label><Input id="plan-name" value={form.name} onChange={(e)=>setForm({...form, name: e.target.value})} required /></div>
+          <div><Label htmlFor="plan-description">Descrição</Label><Input id="plan-description" value={form.description} onChange={(e)=>setForm({...form, description: e.target.value})} /></div>
           <div className="grid grid-cols-2 gap-3">
-            <div><Label>Preço (R$)</Label><Input type="number" step="0.01" value={form.price} onChange={(e)=>setForm({...form, price: Number(e.target.value)})} required /></div>
-            <div><Label>Duração (meses)</Label><Input type="number" value={form.duration_months} onChange={(e)=>setForm({...form, duration_months: Number(e.target.value)})} required /></div>
+            <div><Label htmlFor="plan-price">Preço (R$)</Label><Input id="plan-price" type="number" min="0" step="0.01" value={form.price} onChange={(e)=>setForm({...form, price: Number(e.target.value)})} required /></div>
+            <div><Label htmlFor="plan-duration">Duração (meses)</Label><Input id="plan-duration" type="number" min="1" step="1" value={form.duration_months} onChange={(e)=>setForm({...form, duration_months: Number(e.target.value)})} required /></div>
           </div>
           <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={form.featured} onChange={e=>setForm({...form, featured: e.target.checked})} />Destaque</label>
           <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={create.isPending}>Salvar</Button>
